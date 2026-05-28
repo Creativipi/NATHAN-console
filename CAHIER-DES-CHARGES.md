@@ -11,7 +11,7 @@
 ## Table des matières
 
 1. [Contexte et vision du projet](#1-contexte-et-vision-du-projet)
-2. [État actuel du projet (v1.0)](#2-état-actuel-du-projet-v10) — *inclut jeu existant GlassBreaker et IDE Cantante*
+2. [État actuel du projet (v1.0)](#2-état-actuel-du-projet-v10) — *inclut jeu existant GlassBreaker et IDE*
 3. [Objectifs du projet majeur (v2.0)](#3-objectifs-du-projet-majeur-v20)
 4. [Public cible](#4-public-cible)
 5. [Équipes, rôles et stratégie de développement parallèle](#5-équipes-rôles-et-stratégie-de-développement-parallèle)
@@ -31,7 +31,7 @@
 
 ### 1.1 Origine
 
-Le projet NATHAN est né en 2022 de la collaboration entre Arthur Olivier Fortin et Nathan Therrien, musicien aveugle et passionné de synthétiseurs. L'objectif initial était de concevoir une console de jeu entièrement accessible aux personnes non-voyantes, dans laquelle le son et les sensations tactiles remplacent intégralement l'image.
+Le projet NATHAN est né en 2022 d'une collaboration entre Arthur Olivier Fortin et une personne non-voyante, musicien et passionné de synthétiseurs. L'objectif initial était de concevoir une console de jeu entièrement accessible aux personnes non-voyantes, dans laquelle le son et les sensations tactiles remplacent intégralement l'image. Le projet est réalisé en partenariat avec l'APHVE (Association des Personnes Handicapées Visuelles de l'Estrie), qui accompagne l'équipe avec un groupe d'utilisateurs non-voyants tout au long du développement.
 
 ### 1.2 Mission
 
@@ -140,15 +140,13 @@ class MonMiniJeu:
         pass
 ```
 
-### 2.5 IDE existant — Cantante (Electron + React + TypeScript)
+### 2.5 IDE de programmation (Electron + React + TypeScript)
 
-**Dépôt :** `C:\Cantante`
-
-Cantante est l'application desktop qui servira d'IDE pour programmer les mini-jeux. Elle est en développement actif et sera intégrée dans ce repo sous `ide/`.
+L'IDE fait partie intégrante du projet NATHAN. C'est l'application desktop qui permet aux utilisateurs (y compris non-voyants) de programmer et de transférer des mini-jeux sur la console.
 
 **Stack :** Electron 28 + React 18 + TypeScript 5.3 + Vite 5
 
-#### Ce qui est déjà implémenté dans Cantante
+#### Ce qui est déjà implémenté dans l'IDE
 
 | Fonctionnalité | État | Détail |
 |----------------|------|--------|
@@ -163,7 +161,7 @@ Cantante est l'application desktop qui servira d'IDE pour programmer les mini-je
 | Maestro backend (IA, C# .NET) | ✅ Intégré | Sidecar HTTP, agent "Jarvis" (ask) |
 | Coloration syntaxique TypeScript/JS | ✅ Complet | Tokenizer regex custom |
 
-#### Ce qui manque dans Cantante pour NATHAN
+#### Ce qui reste à développer dans l'IDE pour NATHAN
 
 | Fonctionnalité | Priorité | Notes |
 |----------------|----------|-------|
@@ -176,7 +174,7 @@ Cantante est l'application desktop qui servira d'IDE pour programmer les mini-je
 | Gestionnaire de mini-jeux (liste SD) | Haute | Lecture liste depuis console |
 | Mode d'affichage accessible (grand texte, contraste) | Haute | Accessibilité DV |
 
-> **Cantante est développé séparément.** Son cahier des charges est indépendant de ce document. L'intégration avec la console NATHAN se fera via le protocole USB CDC défini dans la section 7.4. Une fois ce protocole établi, Cantante sera intégré dans ce repo sous `ide/`.
+> L'IDE est développé dans le cadre de ce projet sous `ide/`. L'intégration avec la console NATHAN se fait via le protocole USB CDC défini dans la section 7.4.
 
 ---
 
@@ -194,7 +192,7 @@ Développer un moteur de jeu en **C/C++** tournant entièrement sur l'ESP32-S3, 
 Développer le jeu de démonstration de la console : un jeu entièrement auditif et haptique mettant en scène Nathan, un aveugle, dans sa maison.
 
 ### Axe 4 — Système de mini-jeux
-Permettre aux utilisateurs de programmer et jouer à des mini-jeux écrits en **MicroPython** via l'IDE Cantante (développé séparément).
+Permettre aux utilisateurs de programmer et jouer à des mini-jeux écrits en **MicroPython** via l'IDE du projet.
 
 ---
 
@@ -551,7 +549,7 @@ Direction simulée :  ←←   ←     ↑     →     →→
 
 | Interface | Usage |
 |-----------|-------|
-| USB-C | Charge + connexion à l'IDE Cantante (USB CDC) |
+| USB-C | Charge + connexion à l'IDE NATHAN (USB CDC) |
 | Wi-Fi 2.4 GHz | Mise à jour OTA (optionnel v2.0) |
 | Micro SD | Stockage assets audio, jeux, mini-jeux |
 
@@ -620,10 +618,10 @@ Direction simulée :  ←←   ←     ↑     →     →→
 | `task_game_logic` | Haute | Core 1 | Logique de jeu, état |
 | `task_input_poll` | Haute | Core 1 | Lecture entrées via InputMapper à 100 Hz |
 | `task_haptic_ctrl` | Moyenne | Core 1 | Contrôle moteurs via HapticEngine |
-| `task_usb_bridge` | Basse | Core 1 | Communication USB avec IDE Cantante |
+| `task_usb_bridge` | Basse | Core 1 | Communication USB avec IDE NATHAN |
 | `task_sd_io` | Basse | Core 0 | Lecture assets depuis SD |
 
-### 7.4 Protocole USB CDC (pont avec l'IDE Cantante)
+### 7.4 Protocole USB CDC (pont avec l'IDE NATHAN)
 
 Le firmware expose un port série virtuel (USB CDC) avec un protocole simple :
 
@@ -635,7 +633,7 @@ Le firmware expose un port série virtuel (USB CDC) avec un protocole simple :
 | `LOG` | Console → IDE | Stream des logs/erreurs en temps réel |
 | `META <path>` | IDE → Console | Lire les métadonnées d'un mini-jeu |
 
-> C'est l'unique point de contact entre ce projet et Cantante. Tant que ce protocole est respecté, les deux projets évoluent indépendamment.
+> C'est l'unique point de contact entre ce projet et l'IDE. Tant que ce protocole est respecté, les deux projets évoluent indépendamment.
 
 ### 7.5 Support MicroPython embarqué
 
@@ -874,7 +872,7 @@ Le joueur incarne **Nathan**, un adolescent aveugle. Il doit accomplir des tâch
 **Audio :** Musique arcade 8-bit. Sons d'ordinateur/console.
 
 **Gameplay :**
-- Hub des mini-jeux créés par l'utilisateur via l'IDE Cantante
+- Hub des mini-jeux créés par l'utilisateur via l'IDE NATHAN
 - Nathan s'assoit à son poste et peut lancer un mini-jeu de la liste sur la carte SD
 - Navigation dans la liste par audio (lecture du titre depuis les métadonnées)
 - Retour au salon après fin d'un mini-jeu
@@ -929,7 +927,7 @@ Chaque pièce émet une **signature musicale** différente. Depuis le couloir, l
 ┌─────────────────────┐         ┌─────────────────────────┐
 │     PC / Mac        │  USB-C  │      ESP32-S3           │
 │                     │◄───────►│                         │
-│  IDE Cantante       │ (CDC)   │  MiniGameRunner         │
+│  IDE NATHAN       │ (CDC)   │  MiniGameRunner         │
 │  (développé         │         │  ┌──────────────────┐   │
 │   séparément)       │         │  │  mini_game.py    │   │
 │                     │         │  │                  │   │
@@ -940,7 +938,7 @@ Chaque pièce émet une **signature musicale** différente. Depuis le couloir, l
 └─────────────────────┘         └─────────────────────────┘
 ```
 
-> L'IDE Cantante est développé dans un dépôt séparé et sera intégré sous `ide/` une fois le protocole USB CDC (section 7.4) stabilisé. Le développement de Cantante n'apparaît pas dans la planification de ce cahier des charges.
+> L'IDE NATHAN est développé dans un dépôt séparé et sera intégré sous `ide/` une fois le protocole USB CDC (section 7.4) stabilisé. Le développement de l'IDE n'apparaît pas dans la planification de ce cahier des charges.
 
 ### 10.2 API MicroPython exposée aux mini-jeux
 
@@ -1433,7 +1431,7 @@ Objectif de coût de production unitaire : **< 100$ CAD** pour rendre la console
 - [ ] HapticEngine : StubHaptic + GamepadHaptic + NathanHaptic
 - [ ] Game engine complet (scènes, collisions, bâton, navigation)
 - [ ] Intégration MicroPython + module `nathan`
-- [ ] USB CDC protocole pour IDE Cantante
+- [ ] USB CDC protocole pour IDE NATHAN
 - [ ] Firmware compilé + instructions de flash
 
 ### 14.3 Livrables audio (AUD)
@@ -1458,7 +1456,7 @@ Objectif de coût de production unitaire : **< 100$ CAD** pour rendre la console
 - [ ] README mis à jour pour v2.0
 - [ ] Documentation API game engine
 - [ ] Documentation API MicroPython (`nathan.*`)
-- [ ] Protocole USB CDC (pour l'intégration Cantante)
+- [ ] Protocole USB CDC (pour l'intégration l'IDE)
 - [ ] Guide de contribution open-source
 
 ---
