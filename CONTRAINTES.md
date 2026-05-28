@@ -1,10 +1,10 @@
-# Contraintes du Projet NATHAN Console v2.0
+# Contraintes — Projet NATHAN Console v2.0
 
-**Date :** 2026-05-27
+**Date :** 2026-05-28
 **Session :** PMC660 (S6, E2026)
 
 > Les contraintes sont des **limitations fixes** que le projet doit respecter.
-> Elles ne sont pas négociables — elles encadrent l'espace de solution.
+> Elles ne sont pas négociables : elles encadrent l'espace de solution.
 > Voir `HYPOTHESES.md` pour les suppositions de travail qui, elles, pourraient changer.
 
 ---
@@ -13,10 +13,10 @@
 
 | ID | Contrainte | Justification |
 |----|-----------|---------------|
-| C-01 | Le système doit fonctionner **entièrement sans retour visuel** — aucun écran, aucune LED nécessaire au gameplay | Le public cible est constitué de personnes non-voyantes. Tout feedback visuel serait inutile et exclurait l'utilisateur principal. |
-| C-02 | L'audio doit être restitué **au casque stéréo uniquement** (pas de haut-parleurs) | L'audio spatial binaural (HRTF) nécessite un casque pour produire l'effet de spatialisation 3D. Des haut-parleurs détruiraient l'illusion directionnelle. |
-| C-03 | Tous les contrôles physiques (boutons, joysticks) doivent être **différenciables au toucher** sans indication visuelle | L'utilisateur ne peut pas lire d'étiquettes ni voir les couleurs des boutons. La forme, la taille et la position doivent suffire à identifier chaque contrôle. |
-| C-04 | Tous les menus et interactions du jeu doivent être **navigables exclusivement par le son** | Aucun menu textuel ne peut être affiché. La navigation repose sur des annonces vocales, des signatures musicales et des sons d'interface. |
+| C-01 | **Aucun retour visuel** : le système fonctionne sans écran ni LED nécessaire au gameplay | Le public cible est non-voyant. Tout feedback visuel serait inutile et exclurait l'utilisateur principal. |
+| C-02 | **Casque stéréo uniquement** : pas de haut-parleurs | L'audio binaural (HRTF) nécessite un casque; des haut-parleurs détruiraient l'illusion directionnelle. |
+| C-03 | **Contrôles différenciables au toucher** : sans indication visuelle | L'utilisateur ne peut lire d'étiquettes ni voir les couleurs. Forme, taille et position doivent suffire. |
+| C-04 | **Menus navigables au son** : toutes les interactions exclusivement par l'audio | Aucun menu textuel ne peut être affiché. Annonces vocales, signatures musicales et sons d'interface. |
 
 ---
 
@@ -24,14 +24,14 @@
 
 | ID | Contrainte | Justification |
 |----|-----------|---------------|
-| C-05 | Le game engine doit être **agnostique du matériel** via des interfaces abstraites (contrats d'interface) | L'architecture en blocs avec interfaces permet le développement parallèle sur PC et le portage ultérieur sans réécriture. C'est la stratégie fondamentale du projet. |
-| C-06 | Le développement logiciel doit se faire **d'abord sur PC** avant tout portage embarqué | Le choix du microcontrôleur dépend des besoins réels mesurés par benchmark. Développer sur PC permet d'avancer sans être bloqué par le matériel. |
-| C-07 | Le choix du microcontrôleur doit être basé sur un **benchmark quantitatif** des besoins réels (CPU, RAM, I/O) mesurés pendant le développement PC | Choisir un MCU avant de connaître les besoins réels risquerait de sélectionner un composant inadéquat (trop faible ou surdimensionné). |
-| C-08 | Les assets audio doivent être au format **WAV 16 bits, 44.1 kHz, mono** (effets) ou **stéréo** (ambiances) | Format standard compatible avec les pipelines audio embarqués courants. Le mono est requis pour les sources spatialisées (le moteur HRTF applique la stéréo). |
-| C-09 | Les mini-jeux utilisateurs doivent être écrits en **MicroPython** (pas en C/C++) | MicroPython est accessible aux débutants, y compris des personnes non-voyantes apprenant la programmation. Le C/C++ serait une barrière trop élevée. |
-| C-10 | Les mini-jeux doivent s'exécuter dans un **sandbox isolé** sans accès au firmware ni aux fichiers hors de leur dossier | Sécurité : un mini-jeu tiers ne doit pas pouvoir corrompre le système, écraser le firmware ou accéder aux données d'autres jeux. |
-| C-11 | La communication entre la console et l'IDE doit passer par **USB CDC** (port série virtuel) | Le protocole USB CDC est simple, universel et ne nécessite pas de driver spécifique sur la plupart des OS. L'IDE et le firmware utilisent ce protocole comme interface de transfert. |
-| C-12 | Le stockage des assets et des mini-jeux doit être sur **support amovible** (carte micro SD) | Permet de mettre à jour le contenu sans reflasher le firmware. Facilite aussi le développement et les tests. |
+| C-05 | **Game engine agnostique** : interfaces abstraites (contrats) entre le moteur et le matériel | Permet le développement parallèle sur PC et le portage ultérieur sans réécriture. Stratégie fondamentale du projet. |
+| C-06 | **Développement PC-first** : développer sur PC avant tout portage embarqué | Le choix du MCU dépend des besoins mesurés par benchmark. Développer sur PC évite d'être bloqué par le matériel. |
+| C-07 | **Choix du MCU basé sur benchmark** : décision quantitative (CPU, RAM, I/O) mesurée pendant le dev PC | Choisir un MCU avant de connaître les besoins risquerait de sélectionner un composant inadéquat. |
+| C-08 | **Format audio standard** : WAV 16 bits, 44.1 kHz, mono (effets) ou stéréo (ambiances) | Compatible avec les pipelines audio embarqués. Le mono est requis pour la spatialisation HRTF. |
+| C-09 | **Mini-jeux en MicroPython** : pas en C/C++ | MicroPython est accessible aux débutants, y compris les personnes DV apprenant la programmation. |
+| C-10 | **Sandbox isolé** : les mini-jeux n'accèdent ni au firmware ni aux fichiers hors de leur dossier | Sécurité : un mini-jeu tiers ne doit pas corrompre le système ni les données d'autres jeux. |
+| C-11 | **Communication via USB CDC** : port série virtuel entre la console et l'IDE | Protocole simple et universel, sans driver spécifique. Interface de transfert entre l'IDE et le firmware. |
+| C-12 | **Stockage amovible** : assets et mini-jeux sur carte micro SD | Permet de mettre à jour le contenu sans reflasher le firmware; facilite le développement et les tests. |
 
 ---
 
@@ -39,9 +39,9 @@
 
 | ID | Contrainte | Justification |
 |----|-----------|---------------|
-| C-13 | Budget total du prototype <= **500$ CAD** (incluant une réserve de ~30% pour imprévus) | Aucune contribution financière des départements ou programmes pour les projets PMC (Guide 2.2). Le financement est en autofinancement ou via le partenaire. |
-| C-14 | Coût de production unitaire cible < **100$ CAD** | Pour que la console soit réellement accessible et abordable par rapport aux solutions existantes (manettes adaptées > 300$). |
-| C-15 | Tous les achats doivent être **tracés avec factures** et consignés dans un rapport de dépenses | Exigence du guide étudiant (section 2.2.2) pour la gestion financière et la reddition de comptes. |
+| C-13 | **Budget <= 500$ CAD** : prototype, incluant une réserve de ~30% pour imprévus | Aucune contribution financière des départements pour les projets PMC (Guide 2.2); autofinancement ou partenaire. |
+| C-14 | **Coût de production cible < 100$ CAD** : par unité | Pour rendre la console accessible vs. les solutions existantes (> 300$). |
+| C-15 | **Achats tracés** : factures conservées et consignées dans un rapport de dépenses | Exigence du guide étudiant (section 2.2.2) pour la gestion financière. |
 
 ---
 
@@ -49,11 +49,11 @@
 
 | ID | Contrainte | Justification |
 |----|-----------|---------------|
-| C-16 | Durée totale du projet : **3 sessions** (S6 été 2026, S7 hiver 2027, S8 automne 2027), soit ~78 semaines au total | Cadre du cours PMC660-760-860. Non modifiable. |
-| C-17 | Disponibilité par personne : **135h/session** (soit 540h/personne sur les 3 sessions) | Estimé de base du guide étudiant (section 1, note 7) : 135h par tranche de 3 crédits. |
-| C-18 | Les **contrats d'interface doivent être gelés** avant le début du développement (fin de la semaine 2) | Tout retard dans la définition des interfaces bloque le développement parallèle de tous les blocs. |
-| C-19 | Le **protocole d'essai** pour tout test du prototype doit être soumis **>= 2 semaines avant** l'expérimentation | Exigence du guide étudiant (section 2.1.5). Fabriquer/tester sans protocole approuvé est une faute grave. |
-| C-20 | Le **formulaire d'avis au CER** doit être soumis **>= 4 semaines avant** tout test avec des personnes vulnérables (DV) | Exigence du guide étudiant (section 2.1.4). Le CER peut prendre 1-2 semaines pour répondre, plus si un CER complet est requis. |
+| C-16 | **3 sessions** : S6 (été 2026), S7 (hiver 2027), S8 (automne 2027) | Cadre du cours PMC660-760-860. Non modifiable. |
+| C-17 | **540h/personne** : 135h (S6) + 270h (S7) + 135h (S8) sur les 3 sessions | Estimé du guide étudiant : 135h par tranche de 3 crédits (S6=3cr, S7=6cr, S8=3cr). |
+| C-18 | **Interfaces gelées avant le développement** : fin de la semaine 2 | Tout retard dans la définition des interfaces bloque le développement parallèle de tous les blocs. |
+| C-19 | **Protocole d'essai >= 2 semaines avant tout test** : du prototype | Exigence du guide (section 2.1.5). Tester sans protocole approuvé est une faute grave. |
+| C-20 | **Formulaire CER >= 4 semaines avant tout test DV** : avec des personnes vulnérables | Exigence du guide (section 2.1.4). Le CER peut prendre 1-2 semaines, plus si un CER complet est requis. |
 
 ---
 
@@ -61,11 +61,11 @@
 
 | ID | Contrainte | Justification |
 |----|-----------|---------------|
-| C-21 | Chaque membre doit signer la **cession de droits** (Annexe A) — l'UdeS est propriétaire du prototype pendant le projet | Exigence PMC. Sans cette signature → note "Incomplet" (IN) pour la session. Le prototype est restitué à la fin du projet. |
-| C-22 | La **convention de partenariat** (SARIC) doit être signée **avant de léguer quoi que ce soit** au partenaire | Exigence du guide étudiant (section 2.1.2, étape 5). Protection légale et assurance. |
-| C-23 | Les tests avec personnes vulnérables (non-voyantes) nécessitent une **approbation éthique du CER** | Les personnes DV sont considérées comme population vulnérable. Le CER doit évaluer les risques et approuver le protocole. |
-| C-24 | Le projet doit respecter la **Politique santé et sécurité de l'UdeS** (2500-004) et la **Directive 2600-042** | Obligation légale pour tout travail en laboratoire ou atelier de l'UdeS. Formation sécurité requise si applicable. |
-| C-25 | Les logiciels et datasets utilisés doivent être sous **licence libre** compatible avec la publication open-source | Le projet est open-source (R-38). Tout composant propriétaire ou sous licence restrictive est incompatible. |
+| C-21 | **Cession de droits signée** (Annexe A) : l'UdeS est propriétaire du prototype pendant le projet | Exigence PMC. Sans signature → note "Incomplet" (IN). Le prototype est restitué à la fin. |
+| C-22 | **Convention de partenariat signée avant tout legs** au partenaire (SARIC) | Exigence du guide (section 2.1.2, étape 5). Protection légale et assurance. |
+| C-23 | **Approbation éthique du CER** : pour les tests avec personnes vulnérables (non-voyantes) | Les personnes DV sont une population vulnérable; le CER évalue les risques et approuve le protocole. |
+| C-24 | **Santé et sécurité UdeS** : Politique 2500-004 et Directive 2600-042 | Obligation légale pour tout travail en laboratoire ou atelier de l'UdeS. |
+| C-25 | **Composants sous licence libre** : compatible avec la publication open-source | Le projet est open-source (R-61). Tout composant propriétaire est incompatible. |
 
 ---
 
@@ -73,10 +73,10 @@
 
 | ID | Contrainte | Justification |
 |----|-----------|---------------|
-| C-26 | Le boîtier doit être **fabricable par impression 3D FDM** (PLA ou PETG) | L'équipe dispose de ses propres imprimantes 3D et a accès à celles de la Faculté. Pas de budget ni de volume pour l'injection plastique. |
-| C-27 | Le PCB doit être **fabriqué par un service externe** (JLCPCB, PCBWay ou équivalent) | La Faculté ne fabrique pas de PCB multicouches. Délai de fabrication typique : 2-3 semaines. |
-| C-28 | La **soudure et l'assemblage** doivent être réalisés dans les ateliers de l'UdeS ou chez le partenaire | Exigence de sécurité et d'assurance (Guide 2.1.7). Les activités hors UdeS/partenaire ne sont pas couvertes par l'assurance. |
-| C-29 | La console doit tenir dans les mains d'un adulte : **largeur <= 16 cm** | Contrainte ergonomique pour une manette de jeu portable. Au-delà, la prise en main devient inconfortable. |
+| C-26 | **Boîtier en impression 3D FDM** : PLA ou PETG | L'équipe dispose de ses propres imprimantes 3D et accède à celles de la Faculté. Pas de budget pour l'injection. |
+| C-27 | **PCB fabriqué en externe** : JLCPCB, PCBWay ou équivalent | La Faculté ne fabrique pas de PCB multicouches. Délai typique : 2-3 semaines. |
+| C-28 | **Soudure et assemblage à l'UdeS ou chez le partenaire** | Exigence d'assurance (Guide 2.1.7). Les activités hors UdeS/partenaire ne sont pas couvertes. |
+| C-29 | **Taille tenant en main** : largeur <= 16 cm | Contrainte ergonomique pour une manette portable. Au-delà, la prise en main devient inconfortable. |
 
 ---
 
@@ -84,9 +84,9 @@
 
 | ID | Contrainte | Justification |
 |----|-----------|---------------|
-| C-30 | Tous les assets audio (samples, musiques) doivent être sous **licence libre** (CC0, CC-BY) ou **produits par l'équipe** (enregistrements et créations sonores propres) | Le projet est open-source. Des assets sous copyright rendraient la redistribution illégale. L'équipe produit une partie significative des assets elle-même. |
-| C-31 | L'IDE de programmation de mini-jeux fait **partie intégrante** du projet : il doit être développé, accessible et fonctionnel pour la livraison | L'IDE est le moyen par lequel les utilisateurs (y compris non-voyants) programment et transfèrent des mini-jeux sur la console. Il est indissociable de l'expérience NATHAN. |
-| C-32 | La propriété intellectuelle du projet est gérée par la **convention SARIC** et la cession de droits UdeS | Pendant le projet, l'UdeS est propriétaire. À la fin, l'équipe/le partenaire récupère les droits selon la convention. |
+| C-30 | **Assets audio libres ou produits par l'équipe** : licence libre (CC0, CC-BY) ou créations propres | Le projet est open-source; des assets sous copyright rendraient la redistribution illégale. |
+| C-31 | **IDE intégré au projet** : développé, accessible et fonctionnel pour la livraison | L'IDE permet aux utilisateurs (y compris non-voyants) de programmer et transférer des mini-jeux. Indissociable de NATHAN. |
+| C-32 | **PI gérée par la convention SARIC** : et la cession de droits UdeS | Pendant le projet, l'UdeS est propriétaire; à la fin, l'équipe/le partenaire récupère les droits. |
 
 ---
 

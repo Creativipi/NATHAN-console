@@ -1,7 +1,6 @@
 # Cadre Logique — Projet NATHAN Console v2.0
 
-**Projet :** NATHAN — Narrative Audio Terminal for Humans with Alternative Navigation
-**Date :** 2026-05-26
+**Date :** 2026-05-28
 **Session :** PMC660 (S6, E2026)
 
 ---
@@ -46,8 +45,8 @@
 | **E6. Manette physique (PCB + boîtier + batterie)** | PCB fonctionnel (0 erreur ERC/DRC); boîtier imprimé; assemblage complet; test d'ergonomie passé | Photos assemblage; captures ERC/DRC; rapport tests électriques | Fabricant PCB livre à temps; imprimante 3D disponible |
 | **E7. Jeu "La Maison de Nathan" (code + assets)** | >= 50 WAV 16bit/44.1kHz; >= 4 zones avec interactions; >= 10 clips narration; >= 6 ambiances musicales | Inventaire des assets; test de chaque zone avec checklist | Microphone/logiciel d'enregistrement disponible |
 | **E8. Intégration MicroPython + module `nathan` + 2 mini-jeux** | Module `nathan` expose >= 10 fonctions API testées unitairement; sandbox vérifié; 2 mini-jeux jouables | Tests unitaires; démo des mini-jeux | `micropython-embed` compatible avec le MCU choisi |
-| **E10. IDE de programmation accessible (5 couches : UX accessible, Édition, Assistant IA, Déploiement, Matériel)** | IDE fonctionnel : éditeur MicroPython avec coloration + linter + TTS + screen reader + transfert USB CDC + logs en temps réel + gestionnaire de mini-jeux; cycle écrire→transférer→jouer < 1 min | Démonstration : écriture d'un mini-jeu dans l'IDE, upload, exécution sur console; test d'accessibilité avec lecteur d'écran et 1 utilisateur DV du groupe Discord | Stack technologique maîtrisée; Web Serial API ou serialport npm fonctionnel; TTS français de qualité suffisante |
-| **E9. Documentation + BOM** | README à jour; API game engine documentée (>= 15 fonctions); API MicroPython (>= 10 fonctions); BOM avec prix réels <= 500$ | Documents dans le dépôt; BOM comparé aux factures | Temps alloué à la documentation |
+| **E9. IDE de programmation accessible (5 couches : UX accessible, Édition, Assistant IA, Déploiement, Matériel)** | IDE fonctionnel : éditeur MicroPython avec coloration + linter + TTS + screen reader + transfert USB CDC + logs en temps réel + gestionnaire de mini-jeux; cycle écrire→transférer→jouer < 1 min | Démonstration : écriture d'un mini-jeu dans l'IDE, upload, exécution sur console; test d'accessibilité avec lecteur d'écran et 1 utilisateur DV du groupe Discord | Stack technologique maîtrisée; Web Serial API ou serialport npm fonctionnel; TTS français de qualité suffisante |
+| **E10. Documentation + BOM** | README à jour; API game engine documentée (>= 15 fonctions); API MicroPython (>= 10 fonctions); BOM avec prix réels <= 500$ | Documents dans le dépôt; BOM comparé aux factures | Temps alloué à la documentation |
 
 ---
 
@@ -55,10 +54,10 @@
 
 | Niveaux descriptifs | Indicateurs objectivement vérifiables | Moyens de vérification | Conditions critiques |
 |---|---|---|---|
-| **I1. Équipe de 7 étudiants (GE + GI)** | 7 membres actifs; 135h/personne/session (>= 945h total S6); >= 1 GE, >= 1 GI signal/audio, >= 2 GI firmware | Feuilles de temps hebdomadaires; matrice de compétences | Pas d'abandon; membres inscrits à PMC660 |
+| **I1. Équipe de 7 étudiants (GE + GI)** | 7 membres actifs; 135h/personne en S6 (945h équipe), 540h/personne sur les 3 sessions; >= 1 GE, >= 1 GI signal/audio, >= 2 GI firmware | Feuilles de temps hebdomadaires; matrice de compétences | Pas d'abandon; membres inscrits à PMC660 |
 | **I2. Budget <= 500$ CAD** | Achats tracés; réserve imprévus 30% (100$) planifiée | Tableau de suivi financier; factures conservées | Financement confirmé (autofinancement ou partenaire) |
 | **I3. Matériel de développement initial** | >= 2 manettes USB (PS4/Xbox); casque stéréo; achetés avant sem 3 | Confirmation de réception | Livraison <= 2 semaines |
-| **I4. Matériel MCU et prototypage** | DevKit du MCU choisi + DAC + moteurs + joysticks + batterie; achetés après la décision F.04 (sem 14) | Confirmation de commande post-SYNC 2 | Composants disponibles chez les fournisseurs |
+| **I4. Matériel MCU et prototypage** | DevKit du MCU choisi + DAC + moteurs + joysticks + batterie; achetés après le choix du MCU (S7, après benchmark) | Confirmation de commande post-SYNC 2 | Composants disponibles chez les fournisseurs |
 | **I5. Outils logiciels** | Toolchain du MCU installée sur >= 2 postes; KiCAD; SolidWorks (licence UdeS); bibliothèque audio PC | Build réussi sur 2 postes | Licences actives; machines suffisantes |
 | **I6. Locaux et équipement** | Accès laboratoire UdeS (soudure, oscilloscope); imprimante 3D | Réservation confirmée; formation sécurité complétée | Disponibilité Faculté de génie |
 | **I7. Temps : 26 semaines, 3 sessions** | SYNC 1 (sem 6), SYNC 2 (sem 14), SYNC 3 (sem 22); contrats gelés sem 2 | Gantt/tableau de planification; PV des SYNC | Chemin critique respecté (benchmark → choix MCU → portage) |

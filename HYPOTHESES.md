@@ -1,6 +1,6 @@
 # Hypothèses de Travail — Projet NATHAN Console v2.0
 
-**Date :** 2026-05-27
+**Date :** 2026-05-28
 **Session :** PMC660 (S6, E2026)
 
 > Les hypothèses de travail sont des **suppositions acceptées comme vraies** pour la planification,
@@ -14,110 +14,103 @@
 
 | Statut | Description |
 |--------|-------------|
-| **Acceptée** | Hypothèse validée par observation ou preuve |
-| **Active** | Hypothèse en vigueur, pas encore validée ni invalidée |
-| **À valider** | Hypothèse qui doit être vérifiée à une date précise |
-| **Invalidée** | Hypothèse qui s'est avérée fausse — contingence activée |
+| **Acceptée** | Validée par observation ou preuve |
+| **Active** | En vigueur, pas encore validée ni invalidée |
+| **À valider** | Doit être vérifiée à une date précise |
+| **Invalidée** | S'est avérée fausse : contingence activée |
 
 ---
 
-## 1. Hypothèses sur le partenaire et les utilisateurs
+## 1. Partenaire et utilisateurs DV
 
-| ID | Hypothèse | Statut | Validation prévue | Plan de contingence si invalidée |
-|----|-----------|--------|-------------------|----------------------------------|
-| H-01 | L'APHVE accepte de s'engager comme partenaire officiel et de signer la convention SARIC | Active | Présentation du MIP à l'APHVE (sem 4-5) | Chercher un autre organisme pour personnes DV (ex: IRDPQ, INLB) ou poursuivre sans partenaire formel |
-| H-02 | L'APHVE peut recruter un groupe d'utilisateurs non-voyants disponibles pour >= 2 sessions de test pendant le projet | Active | Discussion avec l'APHVE lors de la présentation du MIP (sem 4-5) | Recruter des testeurs DV via d'autres organismes ou via la communauté Discord du projet |
-| H-03 | Le CER approuve le protocole de test avec personnes DV dans un délai de 1-2 semaines (pas de CER complet requis) | Active | Soumission du formulaire d'avis (>= 4 sem avant le test) | Si CER complet requis : prévoir 4-8 semaines supplémentaires. Soumettre plus tôt que prévu (dès S7). |
-| H-04 | Le partenaire APHVE ne demande pas de clause de confidentialité empêchant la publication open-source | Active | Négociation de la convention SARIC | Négocier une exclusion pour le code source et les fichiers de conception. En dernier recours : retarder la publication. |
-
----
-
-## 2. Hypothèses techniques — Audio HRTF
-
-| ID | Hypothèse | Statut | Validation prévue | Plan de contingence si invalidée |
-|----|-----------|--------|-------------------|----------------------------------|
-| H-05 | Le rendu HRTF en temps réel (convolution, >= 4 sources) est **faisable en software pur** sur un microcontrôleur embarqué de la gamme visée (~240 MHz, ~8 MB RAM) | À valider | Benchmark PC (S7 sem 6-8) → estimation des besoins → benchmark sur le MCU choisi (S7 sem 10-14) | **Fallback 1 :** Réduire la taille des filtres HRTF (128 au lieu de 512 samples). **Fallback 2 :** Limiter à 2-3 sources simultanées. **Fallback 3 :** Ajouter un DSP matériel externe (budget additionnel ~30$). **Fallback 4 :** Audio stéréo simple (panoramique L/R sans HRTF). |
-| H-06 | Un dataset HRTF open-source (MIT KEMAR, CIPIC ou SOFA) offre une qualité de spatialisation suffisante pour la localisation sonore (erreur < 30°) | À valider | Tests perceptuels au casque (S6-S7, tâche C.06) | Tester plusieurs datasets. Si aucun n'est satisfaisant : envisager des HRTF individualisées (plus complexe) ou accepter une précision moindre. |
-| H-07 | Les tables HRTF tiennent en mémoire embarquée (<= 1.5 MB RAM) en laissant suffisamment de marge pour le game engine et les buffers audio | À valider | Mesure de la taille mémoire des HRTF pendant le prototypage PC | Compresser les HRTF (réduction du nombre de positions). Utiliser des HRTF à résolution réduite. |
-| H-08 | La bibliothèque audio PC choisie (miniaudio, libsoundio, etc.) est portable et n'introduit pas de dépendance bloquante pour le portage embarqué | À valider | Choix de la bibliothèque (S6 sem 2-3, tâche C.02) | Écrire un wrapper minimal. Le contrat SpatialAudioEngine isole de toute façon le game engine de l'implémentation audio. |
+| ID | Hypothèse | Statut | Validation prévue | Plan de contingence |
+|----|-----------|--------|-------------------|---------------------|
+| H-01 | **Engagement APHVE** : l'APHVE accepte de s'engager comme partenaire officiel et de signer la convention SARIC | Active | Présentation du MIP à l'APHVE (sem 4-5) | Chercher un autre organisme DV (IRDPQ, INLB) ou poursuivre sans partenaire formel |
+| H-02 | **Recrutement testeurs** : l'APHVE aide à recruter >= 5 personnes DV pour tester/consulter tout au long du projet | Active | Présentation du MIP à l'APHVE (sem 4-5) | Recruter via d'autres organismes DV ou la communauté Discord du projet |
+| H-03 | **Délai CER** : le CER approuve le protocole DV en 1-2 semaines (pas de CER complet requis) | Active | Soumission du formulaire d'avis (>= 4 sem avant le test) | Si CER complet requis : prévoir 4-8 semaines de plus. Soumettre dès S7. |
+| H-04 | **Pas de clause de confidentialité bloquante** : l'APHVE n'empêche pas la publication open-source | Active | Négociation de la convention SARIC | Négocier une exclusion pour le code et les fichiers de conception. En dernier recours, retarder la publication. |
+| H-05 | **Discord accessible** : un serveur Discord est utilisable par les personnes DV (compatible lecteur d'écran) | Active | Création du serveur et test avec 1-2 utilisateurs DV (sem 5-6) | Utiliser un canal alternatif (email, WhatsApp, Telegram) si Discord n'est pas accessible |
+| H-06 | **Engagement durable du groupe** : les membres DV répondent à >= 3 consultations sur la durée du projet | Active | Suivi de l'engagement tout au long du projet | Recruter de nouveaux membres en cas de départs; proposer des incitatifs (accès prioritaire au prototype) |
 
 ---
 
-## 2b. Hypothèses — Communauté et groupe d'utilisateurs DV
+## 2. Audio HRTF
 
-| ID | Hypothèse | Statut | Validation prévue | Plan de contingence si invalidée |
-|----|-----------|--------|-------------------|----------------------------------|
-| H-26 | L'APHVE peut aider à recruter >= 5 personnes DV intéressées à participer comme testeurs/consultants tout au long du projet | Active | Présentation du MIP à l'APHVE (sem 4-5), début du recrutement | Élargir le recrutement via d'autres organismes DV (IRDPQ, INLB) ou réseaux sociaux |
-| H-27 | Un serveur Discord est un canal de communication accessible et adapté pour les personnes DV (compatibilité lecteur d'écran) | Active | Création du serveur et test avec 1-2 utilisateurs DV (sem 5-6) | Si Discord n'est pas accessible : utiliser un groupe de messagerie alternatif (email, WhatsApp, Telegram) |
-| H-28 | Les membres du groupe d'utilisateurs DV restent engagés et disponibles pour répondre à >= 3 consultations sur la durée du projet | Active | Suivi de l'engagement tout au long du projet | Recruter de nouveaux membres si des départs surviennent. Proposer des incitatifs (accès prioritaire au prototype). |
-
----
-
-## 3. Hypothèses techniques — Firmware et intégration
-
-| ID | Hypothèse | Statut | Validation prévue | Plan de contingence si invalidée |
-|----|-----------|--------|-------------------|----------------------------------|
-| H-09 | MicroPython est intégrable dans un firmware C/C++ embarqué via `micropython-embed` (ou équivalent) sans conflit de mémoire ni de scheduler | À valider | Prototypage d'intégration (S7 sem 6-10, tâche E.01) | **Fallback :** Utiliser Lua (plus léger et mieux intégré en C). Adapter le format de mini-jeu. |
-| H-10 | Les interfaces définies en Phase 0 couvrent tous les cas d'usage rencontrés pendant le développement du jeu | Active | Tout au long du développement; validation formelle au SYNC 1 (sem 6) | Modifier l'interface avec accord des deux équipes concernées. Documenter le changement. L'architecture en interfaces limite l'impact. |
-| H-11 | Le GamepadMapper (manette PS4/Xbox) fournit un substitut suffisamment fidèle pour le développement du jeu (joysticks, boutons) malgré l'absence de 5 moteurs haptiques | Active | Dès les premiers tests de jeu sur PC (S6 sem 4-6) | Ajouter un mode de simulation haptique avancé (affichage console de l'intensité par moteur) ou utiliser un gamepad avec retour haptique plus riche. |
-| H-12 | Le portage du game engine du PC vers le MCU choisi ne nécessite **pas de réécriture majeure** grâce à l'architecture en interfaces | À valider | Portage effectif (S8 sem 3-7) | Prévoir du temps supplémentaire pour le portage. L'architecture en blocs isole les changements à chaque implémentation d'interface. |
+| ID | Hypothèse | Statut | Validation prévue | Plan de contingence |
+|----|-----------|--------|-------------------|---------------------|
+| H-07 | **HRTF faisable sur MCU** : le rendu HRTF temps réel (>= 4 sources) tient sur un microcontrôleur de la gamme visée | À valider | Benchmark PC (S7) → estimation → benchmark sur le MCU choisi (S7) | Fallbacks : filtres courts (128 vs 512 samples); 2-3 sources max; DSP externe (~30$); stéréo simple sans HRTF |
+| H-08 | **Qualité du dataset HRTF** : un dataset open-source (MIT KEMAR, CIPIC, SOFA) donne une localisation suffisante (erreur < 30°) | À valider | Tests perceptuels au casque (S6-S7) | Tester plusieurs datasets; envisager des HRTF individualisées ou accepter une précision moindre |
+| H-09 | **HRTF en mémoire** : les tables tiennent en <= 1.5 MB RAM en laissant de la marge pour le moteur et les buffers | À valider | Mesure de la taille mémoire pendant le prototypage PC | Compresser les HRTF (moins de positions) ou réduire la résolution |
+| H-10 | **Bibliothèque audio portable** : la bibliothèque PC choisie n'introduit pas de dépendance bloquante pour le portage | À valider | Choix de la bibliothèque (S6) | Écrire un wrapper minimal; le contrat SpatialAudioEngine isole déjà le moteur de l'implémentation |
 
 ---
 
-## 4. Hypothèses matérielles
+## 3. Firmware et intégration
 
-| ID | Hypothèse | Statut | Validation prévue | Plan de contingence si invalidée |
-|----|-----------|--------|-------------------|----------------------------------|
-| H-13 | Il existe un microcontrôleur sur le marché qui satisfait simultanément les besoins en CPU, RAM, I2S stéréo, USB OTG, >= 4 canaux ADC et >= 5 canaux PWM, pour < 15$ unitaire | À valider | Analyse des candidats MCU (S6-S7, tâches F.01-F.04) | Relâcher une contrainte (ex: USB via puce externe, PWM via expandeur I2C). Accepter un coût unitaire plus élevé. |
-| H-14 | Le fabricant de PCB (JLCPCB/PCBWay) livre en <= 3 semaines après commande | Active | À chaque commande de PCB | Commander plus tôt. Avoir un plan de test sur breadboard comme solution de repli temporaire. |
-| H-15 | Les moteurs de vibration ERM à 3V ont un temps de réponse suffisant pour un feedback haptique perceptible (< 100 ms start/stop) | À valider | Tests sur breadboard (S7 sem 8-12) | Passer à des moteurs LRA (Linear Resonant Actuator) avec driver DRV2605L, plus rapides mais plus chers (~5$/unité). |
-| H-16 | La batterie LiPo choisie (>= 2000 mAh) offre une autonomie >= 4h en usage typique (jeu actif, audio continu, haptique intermittent) | À valider | Test d'autonomie sur prototype assemblé (S8) | Augmenter la capacité de la batterie (3000+ mAh). Optimiser la consommation (sleep Wi-Fi, PWM moteurs réduit). |
-| H-17 | Le boîtier imprimé en 3D FDM est suffisamment solide et ergonomique pour une utilisation prolongée (30+ min) sans inconfort | À valider | Test d'ergonomie (S8 sem 5-7) | Itérer sur le design du boîtier. Changer de matériau (PETG plus résistant que PLA). Ajouter du rembourrage. |
-
----
-
-## 4b. Hypothèses — IDE
-
-| ID | Hypothèse | Statut | Validation prévue | Plan de contingence si invalidée |
-|----|-----------|--------|-------------------|----------------------------------|
-| H-29 | Le stack technologique choisi (Electron/React/TypeScript ou équivalent) permet de créer un IDE accessible (TTS, ARIA, navigation clavier) dans les délais du projet | À valider | Prototype IDE en S7 sem 1-4 | Réduire le périmètre de l'IDE (éditeur + transfert USB seulement). Utiliser un éditeur existant (VSCode + extension custom) comme fallback. |
-| H-30 | La Web Speech API (ou équivalent) fournit un TTS de qualité suffisante en français pour vocaliser le code et les diagnostics | À valider | Tests TTS lors du prototype IDE (S7 sem 2-4) | Utiliser une bibliothèque TTS tierce (eSpeak, pico2wave) ou un service cloud (Google TTS). |
-| H-31 | La communication USB série (Web Serial API ou `serialport` npm) fonctionne de manière fiable depuis l'IDE vers la console | À valider | Tests d'intégration IDE-console (S7 sem 8-12) | Utiliser un script de transfert en ligne de commande comme solution de repli. |
-| H-32 | L'intégration d'un assistant IA (LLM) dans l'IDE est faisable dans le périmètre du projet | À valider | Prototypage en S7 (si temps disponible) | L'assistant IA est priorité I/S — le reporter en post-livraison si nécessaire. L'IDE reste fonctionnel sans IA. |
+| ID | Hypothèse | Statut | Validation prévue | Plan de contingence |
+|----|-----------|--------|-------------------|---------------------|
+| H-11 | **MicroPython intégrable** : l'interpréteur s'intègre dans le firmware C/C++ sans conflit mémoire ni scheduler | À valider | Prototypage d'intégration (S7) | Utiliser Lua (plus léger, mieux intégré en C) et adapter le format de mini-jeu |
+| H-12 | **Interfaces suffisantes** : les interfaces de Phase 0 couvrent tous les cas d'usage du développement | Active | Tout au long du dev; validation formelle au SYNC 1 (sem 6) | Modifier l'interface avec accord des 2 équipes; l'architecture limite l'impact |
+| H-13 | **GamepadMapper fidèle** : la manette PS4/Xbox est un substitut suffisant malgré l'absence de 5 moteurs | Active | Premiers tests de jeu sur PC (S6) | Mode de simulation haptique avancé (logs d'intensité) ou gamepad à retour haptique plus riche |
+| H-14 | **Portage sans réécriture majeure** : le passage du PC au MCU se limite aux implémentations d'interface | À valider | Portage effectif (S8) | Prévoir du temps supplémentaire; l'architecture en blocs isole les changements |
 
 ---
 
-## 5. Hypothèses sur les ressources
+## 4. Matériel
 
-| ID | Hypothèse | Statut | Validation prévue | Plan de contingence si invalidée |
-|----|-----------|--------|-------------------|----------------------------------|
-| H-18 | Les 7 membres de l'équipe restent actifs sur toute la durée du projet, incluant >= 1 étudiant GE et >= 1 spécialisé en signal/audio | Active | Formation des équipes (S6 sem 1) | Redistribuer les responsabilités. Si pas de GE : confier la partie PCB à un GI avec expérience électronique, ou simplifier le design. |
-| H-19 | Les laboratoires de la Faculté de génie sont accessibles quand nécessaire (l'équipe dispose déjà de ses propres imprimantes 3D) | Active | Réservation des locaux (S7-S8) | Réserver tôt. Utiliser les imprimantes 3D de l'équipe comme solution principale. |
-| H-20 | Les composants électroniques nécessaires sont en stock chez les fournisseurs (DigiKey, Mouser, Amazon) et livrables en <= 2 semaines | Active | À chaque commande | Commander en avance. Identifier des composants alternatifs (second source) pour les pièces critiques. |
-| H-21 | Le budget de 500$ est suffisant pour couvrir le prototype complet (incluant imprévus) | Active | Suivi financier continu | Réduire le périmètre (ex: 3 moteurs au lieu de 5). Chercher du financement additionnel via le partenaire. Utiliser des composants récupérés. |
-| H-22 | L'équipe est en mesure de produire les assets audio nécessaires (enregistrements propres, création sonore) et de compléter avec des sources libres (CC0) si nécessaire | Active | Production des sons (S6 sem 3-10) | Sourcer les sons manquants sur Freesound.org (CC0). Utiliser des outils de synthèse sonore. |
+| ID | Hypothèse | Statut | Validation prévue | Plan de contingence |
+|----|-----------|--------|-------------------|---------------------|
+| H-15 | **MCU adéquat disponible** : un MCU satisfait CPU, RAM, I2S, USB OTG, >= 4 ADC, >= 5 PWM pour < 15$ | À valider | Analyse des candidats MCU (S6-S7) | Relâcher une contrainte (USB ou PWM via puce externe); accepter un coût unitaire plus élevé |
+| H-16 | **Livraison PCB <= 3 semaines** : le fabricant (JLCPCB/PCBWay) respecte ce délai | Active | À chaque commande de PCB | Commander plus tôt; garder un plan de test breadboard comme repli temporaire |
+| H-17 | **Moteurs ERM assez rapides** : temps de réponse < 100 ms pour un feedback perceptible | À valider | Tests sur breadboard (S7) | Passer à des moteurs LRA avec driver DRV2605L (plus rapides, ~5$/unité) |
+| H-18 | **Autonomie suffisante** : la batterie LiPo (>= 2000 mAh) donne >= 4h en usage typique | À valider | Test d'autonomie sur prototype assemblé (S8) | Augmenter la capacité (3000+ mAh); optimiser la consommation (sleep Wi-Fi, PWM réduit) |
+| H-19 | **Boîtier 3D solide et ergonomique** : utilisable 30+ min sans inconfort | À valider | Test d'ergonomie (S8) | Itérer le design; passer au PETG (plus résistant); ajouter du rembourrage |
 
 ---
 
-## 6. Hypothèses de gestion
+## 5. IDE
 
-| ID | Hypothèse | Statut | Validation prévue | Plan de contingence si invalidée |
-|----|-----------|--------|-------------------|----------------------------------|
-| H-23 | Chaque membre investit effectivement ~135h/session et respecte ses engagements du contrat d'équipe | Active | Suivi hebdomadaire des heures | Mécanisme PME (évaluation par les pairs). Discussion avec le superviseur. Redistribution des tâches si nécessaire. |
-| H-24 | La méthode de gestion choisie (traditionnelle, agile ou hybride) est adaptée au projet et à l'équipe | Active | Évaluation après le SYNC 1 (sem 6) | Ajuster la méthode en cours de projet. Passer d'une approche à une autre si nécessaire. |
-| H-25 | Les feedbacks du coaching et des superviseurs sont intégrables sans remise en question fondamentale de l'architecture | Active | Après chaque coaching | L'architecture en interfaces absorbe la plupart des changements. Si un changement fondamental est requis : réévaluer le périmètre. |
+| ID | Hypothèse | Statut | Validation prévue | Plan de contingence |
+|----|-----------|--------|-------------------|---------------------|
+| H-20 | **Stack IDE adéquat** : la stack choisie permet un IDE accessible (TTS, ARIA, clavier) dans les délais | À valider | Prototype IDE (S7) | Réduire le périmètre (éditeur + transfert USB); fallback vers VSCode + extension custom |
+| H-21 | **TTS français suffisant** : la Web Speech API (ou équivalent) vocalise correctement code et diagnostics | À valider | Tests TTS lors du prototype IDE (S7) | Bibliothèque TTS tierce (eSpeak, pico2wave) ou service cloud (Google TTS) |
+| H-22 | **USB série fiable** : la communication (Web Serial ou serialport npm) fonctionne de façon fiable IDE → console | À valider | Tests d'intégration IDE-console (S7) | Script de transfert en ligne de commande comme repli |
+| H-23 | **Assistant IA faisable** : l'intégration d'un LLM dans l'IDE tient dans le périmètre | À valider | Prototypage en S7 (si temps disponible) | Reporter l'IA en post-livraison; l'IDE reste fonctionnel sans IA |
+
+---
+
+## 6. Ressources
+
+| ID | Hypothèse | Statut | Validation prévue | Plan de contingence |
+|----|-----------|--------|-------------------|---------------------|
+| H-24 | **Équipe stable** : les 7 membres restent actifs, dont >= 1 GE et >= 1 spécialisé signal/audio | Active | Formation des équipes (S6 sem 1) | Redistribuer les responsabilités; confier le PCB à un GI expérimenté si pas de GE |
+| H-25 | **Laboratoires accessibles** : labos de la Faculté disponibles (l'équipe a ses propres imprimantes 3D) | Active | Réservation des locaux (S7-S8) | Réserver tôt; utiliser les imprimantes de l'équipe comme solution principale |
+| H-26 | **Composants en stock** : disponibles chez les fournisseurs (DigiKey, Mouser, Amazon), livrables en <= 2 semaines | Active | À chaque commande | Commander en avance; identifier des composants alternatifs (second source) |
+| H-27 | **Budget suffisant** : 500$ couvre le prototype complet (imprévus inclus) | Active | Suivi financier continu | Réduire le périmètre (3 moteurs au lieu de 5); financement additionnel; composants récupérés |
+| H-28 | **Production audio interne** : l'équipe peut produire les assets (enregistrements, création) et compléter avec du CC0 | Active | Production des sons (S6) | Sourcer les sons manquants sur Freesound.org (CC0); outils de synthèse sonore |
+
+---
+
+## 7. Gestion
+
+| ID | Hypothèse | Statut | Validation prévue | Plan de contingence |
+|----|-----------|--------|-------------------|---------------------|
+| H-29 | **Implication des membres** : chacun investit ~135h/session et respecte le contrat d'équipe | Active | Suivi hebdomadaire des heures | Mécanisme PME (évaluation par les pairs); discussion avec le superviseur; redistribution |
+| H-30 | **Méthode de gestion adaptée** : la méthode choisie (traditionnelle, agile, hybride) convient au projet | Active | Évaluation après le SYNC 1 (sem 6) | Ajuster ou changer de méthode en cours de projet |
+| H-31 | **Feedbacks intégrables** : les retours du coaching n'exigent pas de remise en question fondamentale | Active | Après chaque coaching | L'architecture en interfaces absorbe la plupart des changements; sinon réévaluer le périmètre |
+| H-32 | **Convention SARIC dans les délais** : la convention de partenariat se conclut sans bloquer le projet | Active | Suivi du dossier SARIC (S6-S7) | Avancer le développement en parallèle; relancer la coordination PMC en cas de retard |
 
 ---
 
 ## Suivi des hypothèses
 
-Le statut de chaque hypothèse doit être revu aux points de synchronisation :
+Le statut de chaque hypothèse est revu aux points de synchronisation :
 
 | Moment | Hypothèses à valider en priorité |
 |--------|----------------------------------|
-| **SYNC 1** (sem 6) | H-01 (partenaire), H-06 (qualité HRTF), H-10 (interfaces), H-11 (GamepadMapper), H-18 (équipe), H-26 (recrutement DV), H-27 (Discord accessible) |
-| **SYNC 2** (sem 14) | H-05 (HRTF embarqué), H-07 (mémoire HRTF), H-08 (bibliothèque audio), H-13 (MCU), H-09 (MicroPython), H-29 (stack IDE), H-30 (TTS) |
-| **SYNC 3** (sem 22) | H-12 (portage), H-14 (livraison PCB), H-15 (moteurs ERM), H-16 (autonomie), H-17 (boîtier), H-31 (USB série IDE), H-28 (engagement DV) |
+| **SYNC 1** (sem 6) | H-01 (partenaire), H-02 (recrutement), H-05 (Discord), H-08 (qualité HRTF), H-12 (interfaces), H-13 (GamepadMapper), H-24 (équipe) |
+| **SYNC 2** (sem 14) | H-07 (HRTF embarqué), H-09 (mémoire HRTF), H-10 (bibliothèque audio), H-11 (MicroPython), H-15 (MCU), H-20 (stack IDE), H-21 (TTS) |
+| **SYNC 3** (sem 22) | H-06 (engagement DV), H-14 (portage), H-16 (livraison PCB), H-17 (moteurs ERM), H-18 (autonomie), H-19 (boîtier), H-22 (USB série IDE) |
 
 ---
 
