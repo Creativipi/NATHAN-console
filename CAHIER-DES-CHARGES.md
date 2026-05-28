@@ -72,7 +72,7 @@ Créer une console de jeu **open-source**, **abordable** et **inclusive**, où l
 
 ### 2.3 Ce qui n'existe pas encore (côté console v2.0)
 
-- Firmware ESP32-S3 : **non démarré** (à écrire en C/C++ avec ESP-IDF)
+- Firmware embarqué : **non démarré** (à écrire en C/C++, MCU à déterminer)
 - Game engine spatial : **non démarré**
 - IDE mini-jeux (intégration NATHAN) : **en cours** (voir 2.5)
 
@@ -183,10 +183,10 @@ L'IDE fait partie intégrante du projet NATHAN. C'est l'application desktop qui 
 Le projet v2.0 constitue une **refonte complète** articulée autour de quatre axes :
 
 ### Axe 1 — Refonte hardware
-Remplacer le Raspberry Pi Pico par un **ESP32-S3**, ajouter **2 joysticks analogiques**, **5 moteurs de vibration en arc**, et migrer vers une **batterie LiPo USB-C rechargeable**.
+Remplacer le Raspberry Pi Pico par un **microcontrôleur adapté** (choisi après benchmark), ajouter **2 joysticks analogiques**, **5 moteurs de vibration en arc**, et migrer vers une **batterie LiPo USB-C rechargeable**.
 
 ### Axe 2 — Game engine embarqué
-Développer un moteur de jeu en **C/C++** tournant entièrement sur l'ESP32-S3, avec un système de placement 2D+hauteur permettant le calcul automatique d'**audio spatial binaural (HRTF)**.
+Développer un moteur de jeu en **C/C++** tournant sur le microcontrôleur choisi, avec un système de placement 2D+hauteur permettant le calcul automatique d'**audio spatial binaural (HRTF)**.
 
 ### Axe 3 — Premier jeu : La Maison de Nathan
 Développer le jeu de démonstration de la console : un jeu entièrement auditif et haptique mettant en scène Nathan, un aveugle, dans sa maison.
@@ -280,12 +280,12 @@ Un module **InputMapper** abstrait complètement le matériel :
 
 #### Stratégie B — Développement audio PC-first (découple AUD ↔ ELEC)
 
-Le développeur audio ne touche **jamais** à l'ESP32-S3 avant la Phase 3. Tout le développement HRTF se fait sur PC :
+Le développeur audio ne touche **jamais** au microcontrôleur avant la Phase 3. Tout le développement HRTF se fait sur PC :
 
 ```
 Phase 1 : Recherche + prototypage PC (C/C++ + miniaudio ou libsoundio)
 Phase 2 : Module audio spatial fonctionnel sur PC, testé au casque
-Phase 3 : Portage vers ESP32-S3, benchmark CPU/latence
+Phase 3 : Portage vers le MCU choisi, benchmark CPU/latence
 Phase 3b: Décision : software pur OU ajout DSP matériel externe
 ```
 
@@ -343,7 +343,7 @@ void spatial_audio_stop_ambient(void);
 |----------------|-------------|-------|---------|
 | `StubAudio` | ENG | Phase 1 | Pas de son, logs console uniquement |
 | `PCAudio` | AUD, JEU | Phase 1-2 | `miniaudio` + HRTF sur PC |
-| `ESP32Audio` | Tous | Phase 3+ | I2S + PCM5102A + HRTF embarqué |
+| `EmbeddedAudio` | Tous | Phase 3+ | I2S + DAC + HRTF embarqué (MCU choisi après benchmark) |
 
 #### Contrat 3 — HapticEngine (ENG ↔ ELEC)
 
@@ -367,7 +367,7 @@ void haptic_stop_all(void);
 |----------------|-------|--------------|
 | `StubHaptic` | Phase 1 | Logs console uniquement |
 | `GamepadHaptic` | Phase 1-2 | Vibration unique du gamepad USB |
-| `NathanHaptic` | Phase 3+ | 5 moteurs PWM réels via GPIO ESP32-S3 |
+| `NathanHaptic` | Phase 3+ | 5 moteurs PWM réels via GPIO du MCU choisi |
 
 #### Contrat 4 — StorageProvider (ENG)
 
@@ -399,21 +399,22 @@ void minigame_unload(void);
 
 | Livrable | ELEC | ENG | AUD | JEU |
 |----------|------|-----|-----|-----|
-| Schéma / PCB ESP32-S3 | **R** | C | — | — |
+| Schéma / PCB (MCU choisi) | **R** | C | — | — |
 | Boîtier v2.0 (SolidWorks) | **R** | C | — | — |
 | Soudure et validation matérielle | **R** | — | — | — |
 | Contrats d'interface (Phase 0) | C | **R** | C | I |
 | InputMapper (toutes implémentations) | C | **R** | — | — |
 | Game engine (scènes, collisions, bâton) | — | **R** | — | I |
 | Pipeline HRTF (recherche + implémentation) | — | I | **R** | — |
-| Portage audio ESP32-S3 | C | I | **R** | — |
+| Portage audio embarqué | C | I | **R** | — |
 | Intégration MicroPython | — | **R** | — | I |
 | Design des pièces du jeu | — | I | I | **R** |
 | Banque de sons et musiques | — | — | C | **R** |
-| Narration audio (voix Nathan) | — | — | — | **R** |
+| Narration audio (tutoriel, voix personnage) | — | — | — | **R** |
 | Mécaniques guitare/batterie | — | C | C | **R** |
 | Tests d'intégration finale | C | **R** | C | C |
-| Tests utilisateur (personne DV) | I | C | C | **R** |
+| Tests utilisateur (groupe DV via APHVE) | I | C | C | **R** |
+| IDE de programmation | — | **R** | — | C |
 
 > **R** = Responsable, **C** = Consulté, **I** = Informé
 
@@ -421,34 +422,44 @@ void minigame_unload(void);
 
 ## 6. Spécifications hardware (v2.0)
 
-### 6.1 Microcontrôleur — ESP32-S3
+### 6.1 Microcontrôleur — À déterminer
 
-| Paramètre | Valeur |
-|-----------|--------|
-| Modèle | ESP32-S3 (module avec PSRAM) |
-| Cœurs | 2x Xtensa LX7 @ 240 MHz |
-| RAM | 512 KB SRAM + 8 MB PSRAM (externe) |
-| Flash | 16 MB (minimum recommandé) |
-| ADC | 20 canaux (12 bits) |
-| I2S | 2x interfaces I2S |
-| USB | USB OTG natif (USB-HID / CDC) |
-| Wi-Fi | 802.11 b/g/n 2.4 GHz |
-| Bluetooth | BT 5.0 + BLE |
+Le microcontrôleur sera choisi **après le benchmark du jeu sur PC**, qui mesurera les besoins réels en CPU, RAM et I/O. Cette décision est le jalon clé du chemin critique (voir `TACHES.md`).
 
-**Justification du choix :** L'ESP32-S3 est le seul microcontrôleur de la gamme ESP32 offrant simultanément USB OTG natif (pour la connexion à l'IDE), suffisamment de RAM pour le HRTF temps réel, et deux interfaces I2S pour l'audio stéréo de haute qualité.
+**Besoins minimaux identifiés :**
+
+| Paramètre | Besoin minimum | Justification |
+|-----------|----------------|---------------|
+| CPU | >= 2 cœurs, >= 160 MHz | Un cœur dédié au rendu audio HRTF, un à la logique de jeu |
+| RAM | >= 4 MB (PSRAM) | Tables HRTF (~1 MB) + buffers audio + game engine + MicroPython |
+| Flash | >= 8 MB | Firmware + interpréteur MicroPython |
+| I2S | >= 1 interface stéréo | Connexion au DAC audio externe |
+| ADC | >= 4 canaux, >= 10 bits | 2 joysticks × 2 axes |
+| PWM | >= 5 canaux | 5 moteurs haptiques individuels |
+| USB | USB OTG ou CDC natif | Communication avec l'IDE (port série virtuel) |
+| SPI | >= 1 | Lecteur carte micro SD |
+| GPIO | >= 9 numériques | 7 boutons + 2 clicks joystick |
+
+**Candidats préliminaires** (analyse détaillée dans le MIP) :
+
+| MCU | CPU | RAM | I2S | USB | Prix (~) |
+|-----|-----|-----|-----|-----|----------|
+| ESP32-S3 | 2× 240 MHz | 8 MB PSRAM | 2× | USB OTG natif | ~5$ |
+| RP2350 | 2× 150 MHz | 520 KB + ext | 2× | USB 1.1 | ~1$ |
+| STM32H7 | 1× 480 MHz | 1 MB + ext | 2× | USB OTG | ~10$ |
+
+> Le choix final sera documenté dans un **rapport de justification quantitatif** basé sur le benchmark PC (voir `TACHES.md`, jalon "Choix du MCU").
 
 ### 6.2 Système audio
 
-#### DAC audio
+**Le DAC audio sera choisi en même temps que le MCU.** Les besoins sont :
 
-| Paramètre | Valeur |
+| Paramètre | Besoin |
 |-----------|--------|
-| Puce DAC | PCM5102A (Texas Instruments) |
-| Interface | I2S |
-| Résolution | 32 bits / 384 kHz max |
-| SNR | 112 dB |
+| Interface | I2S (compatible avec le MCU choisi) |
+| Résolution | >= 16 bits, >= 44.1 kHz |
+| SNR | >= 80 dB |
 | Sortie | Jack stéréo 3.5mm (casque uniquement) |
-| Amplificateur | Intégré dans PCM5102A (ligne) |
 
 **Note importante :** Le jeu est conçu pour une écoute au **casque stéréo uniquement**. Le son spatial binaural (HRTF) requiert un casque pour l'effet 3D.
 
@@ -463,7 +474,7 @@ Application HRTF (lookup table, MIT KEMAR ou équivalent open-source)
         ↓
 Mix audio binaural (canal L + canal R)
         ↓
-Buffer DMA → I2S → PCM5102A → Jack 3.5mm
+Buffer DMA → I2S → DAC → Jack 3.5mm
 ```
 
 #### Format audio des assets
@@ -530,20 +541,15 @@ Direction simulée :  ←←   ←     ↑     →     →→
 
 ### 6.5 Alimentation
 
-| Paramètre | Valeur |
+| Paramètre | Besoin |
 |-----------|--------|
 | Batterie | LiPo 1S (3.7V) — capacité min. 2000 mAh |
 | Connecteur de charge | USB-C |
-| Circuit de charge | TP4056 ou MCP73831 |
 | Protection | Surcharge, décharge profonde, court-circuit |
-| Régulateur | LDO 3.3V (ex: AMS1117-3.3) pour ESP32-S3 |
-| Autonomie cible | ≥ 8 heures |
+| Régulateur | LDO 3.3V pour le MCU |
+| Autonomie cible | >= 4 heures en usage typique |
 
-**Estimation de consommation :**
-- ESP32-S3 actif : ~240 mA max
-- PCM5102A : ~10 mA
-- 5 moteurs (pic simultané max) : ~5 × 150 mA = 750 mA
-- Total pic : ~1A → batterie 2000 mAh ≈ 2h en pic, ~6-8h en usage normal
+> L'estimation de consommation détaillée sera calculée une fois le MCU et le DAC choisis.
 
 ### 6.6 Connectivité
 
@@ -569,7 +575,7 @@ Direction simulée :  ←←   ←     ↑     →     →→
 - `CAD_Files/Console/NATHAN-console-asm.SLDASM` — refonte complète
 - `CAD_Files/Console/parts/*.SLDPRT` — toutes les pièces
 - `3D Print Models/*.STL` — regenerer depuis les nouveaux SLDPRT
-- `CAD_Files/PCB/` — nouveau schéma et PCB pour ESP32-S3
+- `CAD_Files/PCB/` — nouveau schéma et PCB pour le MCU choisi
 
 ---
 
@@ -579,12 +585,12 @@ Direction simulée :  ←←   ←     ↑     →     →→
 
 | Paramètre | Valeur |
 |-----------|--------|
-| SDK | ESP-IDF v5.x (officiel Espressif) |
+| SDK | Dépend du MCU choisi (ex: ESP-IDF, Pico SDK, STM32 HAL) |
 | Langage principal | C / C++17 |
 | Build system | CMake |
-| IDE recommandé | VSCode + extension ESP-IDF |
-| Débogage | JTAG via USB (ESP32-S3 supporte le JTAG USB natif) |
 | Tests | Unity test framework (embarqué) |
+
+> Le SDK et les outils de débogage seront déterminés après le choix du MCU.
 
 ### 7.2 Architecture firmware
 
@@ -794,7 +800,7 @@ Le joueur incarne **Nathan**, un adolescent aveugle. Il doit accomplir des tâch
 **Gameplay :**
 - Premier endroit où le joueur apprend à se déplacer avec le joystick gauche
 - Apprentissage de la navigation au son (chaque pièce a une signature musicale)
-- Tutoriel intégré au jeu (voix de Nathan explique ses sens)
+- Tutoriel intégré au jeu (voix du personnage explique ses sens)
 
 **Éléments interactifs :**
 - Canapé (son d'assise)
@@ -925,7 +931,7 @@ Chaque pièce émet une **signature musicale** différente. Depuis le couloir, l
 
 ```
 ┌─────────────────────┐         ┌─────────────────────────┐
-│     PC / Mac        │  USB-C  │      ESP32-S3           │
+│     PC / Mac        │  USB-C  │      MCU NATHAN         │
 │                     │◄───────►│                         │
 │  IDE NATHAN       │ (CDC)   │  MiniGameRunner         │
 │  (développé         │         │  ┌──────────────────┐   │
@@ -1027,342 +1033,48 @@ def create():
 
 ---
 
-## 11. Contraintes et risques techniques
+## 11. Contraintes et risques
 
-### 11.1 Risques majeurs
+> Les contraintes détaillées, les hypothèses de travail et les plans de contingence sont documentés dans :
+> - `CONTRAINTES.md` — 32 contraintes fixes (accessibilité, techniques, financières, réglementaires)
+> - `HYPOTHESES.md` — 32 hypothèses de travail avec validation prévue et plan de contingence
 
-#### Risque R1 — HRTF temps réel sur ESP32-S3 (CRITIQUE)
+### 11.1 Risques techniques principaux (résumé)
 
-| Paramètre | Détail |
-|-----------|--------|
-| Niveau | Critique |
-| Description | Le rendu HRTF temps réel (convolution) est très coûteux en CPU. Avec plusieurs sources simultanées, l'ESP32-S3 pourrait atteindre ses limites. |
-| Impact | Latence audio, artifacts, ou limitation du nombre de sons simultanés |
-| Mitigation 1 | Utiliser des HRTF avec réponses impulsionnelles courtes (128 samples au lieu de 512) |
-| Mitigation 2 | Limiter à 4-6 sources sonores spatiales simultanées |
-| Mitigation 3 | Pré-calculer les positions pour les sons statiques (bake offline) |
-| Mitigation 4 | En fallback, audio stéréo simple (panoramique L/R) sans HRTF si charge trop haute |
-| Responsable | Équipe AUD — décision à prendre à la Phase 2 après benchmark PC et ESP32 |
-
-#### Risque R2 — Autonomie batterie (ÉLEVÉ)
-
-| Paramètre | Détail |
-|-----------|--------|
-| Niveau | Élevé |
-| Description | 5 moteurs + ESP32-S3 actif + DAC = consommation pic ~1A |
-| Mitigation | Gérer l'activation des moteurs (jamais tous 5 en continu), sleep du Wi-Fi quand inutile, 2500 mAh minimum |
-| Responsable | Équipe ELEC |
-
-#### Risque R3 — MicroPython sur ESP32-S3 (MOYEN)
-
-| Paramètre | Détail |
-|-----------|--------|
-| Niveau | Moyen |
-| Description | L'intégration de MicroPython comme composant ESP-IDF en parallèle du game engine C++ est complexe |
-| Mitigation | Utiliser `micropython-embed`, dédier le Core 0 au game engine et le Core 1 à l'interpréteur MicroPython |
-| Responsable | Équipe ENG |
-
-#### Risque R4 — Ergonomie boîtier avec 2 joysticks (MOYEN)
-
-| Paramètre | Détail |
-|-----------|--------|
-| Niveau | Moyen |
-| Description | La refonte mécanique est importante. Le boîtier v1.0 ne supporte pas 2 joysticks. |
-| Mitigation | Prototype en impression 3D rapide, validation ergonomique avant fabrication finale |
-| Responsable | Équipe ELEC |
-
-#### Risque R5 — Désynchronisation entre équipes (ÉLEVÉ)
-
-| Paramètre | Détail |
-|-----------|--------|
-| Niveau | Élevé |
-| Description | Les 4 équipes travaillent en parallèle. Si les contrats d'interface ne sont pas respectés ou changent en cours de route, l'intégration (Phase 3) devient chaotique. |
-| Impact | Retards majeurs à l'intégration, bugs d'interface, rework |
-| Mitigation 1 | **Phase 0 obligatoire** : valider les contrats d'interface ensemble avant tout code |
-| Mitigation 2 | **Points de synchronisation** fixes (SYNC 1, 2, 3) avec intégration incrémentale |
-| Mitigation 3 | **Tests d'interface** : chaque implémentation est testée contre un stub de l'autre côté |
-| Mitigation 4 | **Gel des interfaces** après Phase 0. Tout changement d'interface requiert l'accord des deux équipes impactées |
-| Responsable | Chef de projet / toutes les équipes |
+| Risque | Niveau | Mitigation |
+|--------|--------|------------|
+| HRTF temps réel sur MCU embarqué | Critique | Benchmark PC d'abord → choix MCU adapté → fallbacks : filtres courts, moins de sources, DSP externe, stéréo simple |
+| Autonomie batterie | Élevé | Gestion PWM moteurs, sleep Wi-Fi, batterie >= 2000 mAh |
+| Intégration MicroPython dans le firmware | Moyen | Prototypage précoce, fallback vers Lua si incompatible |
+| Ergonomie boîtier | Moyen | Itérations rapides en impression 3D, tests avec utilisateurs DV |
+| Désynchronisation entre équipes | Élevé | Contrats d'interface gelés Phase 0, 3 SYNC, tests d'interface |
+| Accessibilité de l'IDE | Moyen | Prototypage TTS/ARIA précoce, tests avec utilisateurs DV du groupe Discord |
 
 ### 11.2 Contraintes techniques reconnues
 
-- ESP32-S3 : RAM totale 8 MB PSRAM — les HRTF lookup tables MIT KEMAR prennent ~1 MB, laisser ~6 MB pour le moteur et les samples audio en buffer
-- Micro SD : Latence de lecture (~few ms) — les samples audio doivent être pré-chargés en RAM avant lecture
-- MicroPython : Vitesse d'exécution ~10-50x plus lente que C — les mini-jeux sont des jeux simples, pas de physique complexe
-- PCM5102A : Pas de contrôle de volume hardware — le volume doit être géré par software
+- Micro SD : Latence de lecture (~few ms) — les samples audio doivent être pré-chargés en RAM
+- MicroPython : Vitesse d'exécution ~10-50x plus lente que C — les mini-jeux sont des jeux simples
+- Le volume audio doit être géré par software (la plupart des DAC I2S n'ont pas de contrôle hardware)
 
 ---
 
-## 12. Planification par workstreams et dépendances
+## 12. Planification
 
-### 12.1 Vue d'ensemble — 4 workstreams parallèles
+> La planification détaillée (tâches, chronologie, chemins critiques parallèles, jalons de convergence,
+> point de transition manette Xbox → manette NATHAN) est documentée dans `TACHES.md`.
 
-```
-Semaines    1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26
-            │           │  SYNC 1     │              │  SYNC 2     │              │  SYNC 3
-            │           │  (sem 6)    │              │  (sem 14)   │              │  (sem 22)
-            │           │             │              │             │              │
-Phase 0:    ██          │             │              │             │              │
-(toutes)    │           │             │              │             │              │
-            │           │             │              │             │              │
-ELEC:       ░░ ████████████████ ░░░░░████████████████░░░░░░████████░░░░░░░░░░░░░░│
-            │  Schéma+PCB      Fab   Soudure+Test   │  Boîtier    │              │
-            │           │             │              │             │              │
-ENG:        ░░ ████████████████████████████████████████████████████████████████████
-            │  Mapper+HAL stubs Scènes+Collisions   │  MicroPy    │  Intégration │
-            │           │             │              │             │              │
-AUD:        ░░ ████████████████████████████████████████████████████░░░░░░░░░░░░░░│
-            │  Recherche HRTF  Proto PC│  Benchmark  │  Portage    │              │
-            │           │             │  ESP32       │  ESP32      │              │
-            │           │             │              │             │              │
-JEU:        ░░ ░░░░████████████████████████████████████████████████████████████████
-            │     Design+Sons  Salon+Cuisine+Chambre │  Musique+École│  Polish    │
-```
+### 12.1 Principe de planification
 
-### 12.2 Phase 0 — Contrats d'interface et setup (semaines 1-2)
+Le projet suit une approche **PC-first** avec 6 flux parallèles convergeant à des jalons clés :
 
-**Durée :** 2 semaines
-**Équipes :** TOUTES
-**Objectif :** Aligner toutes les équipes, figer les interfaces, préparer l'environnement.
+1. **Game Engine** (ENG) — développé sur PC avec manette USB de substitution
+2. **Audio HRTF** (AUD) — développé sur PC, porté après benchmark
+3. **Hardware** (ELEC) — conçu après le choix du MCU basé sur les benchmarks
+4. **Contenu de jeu** (JEU) — développé sur PC indépendamment du matériel
+5. **IDE** (ENG) — développé en parallèle, intégré via USB CDC
+6. **Communauté DV** — feedback continu via Discord tout au long du projet
 
-| ID | Tâche | Responsable | Dépendances | Priorité |
-|----|-------|-------------|-------------|----------|
-| P0.1 | Rédiger et valider le contrat InputMapper | ENG + ELEC | — | Critique |
-| P0.2 | Rédiger et valider le contrat SpatialAudioEngine | ENG + AUD | — | Critique |
-| P0.3 | Rédiger et valider le contrat HapticEngine | ENG + ELEC | — | Critique |
-| P0.4 | Rédiger et valider le contrat StorageProvider | ENG | — | Critique |
-| P0.5 | Rédiger et valider le contrat MiniGameRunner | ENG | — | Critique |
-| P0.6 | Acheter 2-3 manettes USB (DualShock/Xbox) pour dev | ENG | — | Critique |
-| P0.7 | Acheter ESP32-S3 DevKit + PCM5102A module (pour ELEC et AUD) | ELEC | — | Critique |
-| P0.8 | Setup repo : structure dossiers `firmware/`, `engine/`, `game/`, `audio/` | ENG | — | Haute |
-| P0.9 | Setup ESP-IDF + CMake + premier build vide | ENG | P0.8 | Haute |
-| P0.10 | Document de conventions (nommage, coding style, format WAV, arborescence SD) | TOUTES | — | Haute |
-
-**Jalon Phase 0 :** Contrats validés et signés par toutes les équipes. Matériel commandé.
-
----
-
-### 12.3 Workstream ELEC — Manette physique
-
-**Responsable :** Équipe génie électrique
-**Indépendant de :** ENG, AUD, JEU (aucune dépendance bloquante après Phase 0)
-
-| ID | Tâche | Semaines | Dépendances | Priorité |
-|----|-------|----------|-------------|----------|
-| ELEC.1 | Breadboard ESP32-S3 + PCM5102A : valider I2S audio | 2-4 | P0.7 | Critique |
-| ELEC.2 | Breadboard 5 moteurs PWM : valider contrôle intensité | 2-4 | P0.7 | Critique |
-| ELEC.3 | Breadboard 2 joysticks ADC : valider lecture | 2-4 | P0.7 | Haute |
-| ELEC.4 | Breadboard alimentation LiPo + USB-C charge | 3-5 | P0.7 | Haute |
-| ELEC.5 | Schéma KiCAD v2.0 complet | 4-7 | ELEC.1-4 | Critique |
-| ELEC.6 | PCB KiCAD v2.0 layout + DRC | 6-8 | ELEC.5 | Critique |
-| ELEC.7 | Commande PCB (JLCPCB/PCBWay) | 8 | ELEC.6 | Critique |
-| ELEC.8 | *Attente fabrication PCB (~2 semaines)* | 8-10 | ELEC.7 | — |
-| ELEC.9 | Soudure composants PCB v2.0 | 10-11 | ELEC.8 | Critique |
-| ELEC.10 | Tests électriques PCB (continuité, tensions, courant) | 11-12 | ELEC.9 | Critique |
-| ELEC.11 | Flash firmware de test sur PCB (valider ESP-IDF boot) | 12-13 | ELEC.10, ENG.2 | Critique |
-| ELEC.12 | Refonte boîtier SolidWorks v2.0 | 8-14 | ELEC.3, ELEC.2 | Haute |
-| ELEC.13 | Impression 3D prototype boîtier | 14-15 | ELEC.12 | Haute |
-| ELEC.14 | Assemblage complet : PCB + boîtier + batterie | 15-16 | ELEC.13, ELEC.10 | Haute |
-| ELEC.15 | Test ergonomie avec utilisateur | 16-18 | ELEC.14 | Haute |
-| ELEC.16 | Mise à jour BOM v2.0 | 7-8 | ELEC.5 | Moyenne |
-
-**Jalons ELEC :**
-- **SYNC 1 (sem 6) :** Breadboard fonctionnel, schéma en cours. Fournir aux devs les specs exactes des GPIO/ADC.
-- **SYNC 2 (sem 14) :** PCB soudé et testé. Prêt pour flash firmware.
-- **SYNC 3 (sem 22) :** Manette complète assemblée (PCB + boîtier + batterie). Prête pour intégration finale.
-
----
-
-### 12.4 Workstream ENG — Game Engine
-
-**Responsable :** Équipe génie informatique (engine)
-**Utilise :** Manette USB de substitution (GamepadMapper) jusqu'à SYNC 3
-**Dépend de :** Contrats d'interface (Phase 0)
-
-| ID | Tâche | Semaines | Dépendances | Priorité |
-|----|-------|----------|-------------|----------|
-| ENG.1 | Implémenter `GamepadMapper` (manette USB → InputState) | 2-3 | P0.1, P0.6 | Critique |
-| ENG.2 | Implémenter `StubAudio` (logs sans son) | 2-3 | P0.2 | Critique |
-| ENG.3 | Implémenter `StubHaptic` + `GamepadHaptic` | 2-3 | P0.3 | Critique |
-| ENG.4 | Implémenter `StorageProvider` (SD card FAT32) | 3-4 | P0.4 | Haute |
-| ENG.5 | Implémenter `DebugMapper` (clavier/souris) | 3 | P0.1 | Moyenne |
-| ENG.6 | Système de scènes : create/load/unload/transition | 4-6 | ENG.2 | Critique |
-| ENG.7 | Représentation monde 2D+Z, gestion entités | 4-6 | — | Critique |
-| ENG.8 | Système de collision : murs, obstacles | 5-7 | ENG.7 | Critique |
-| ENG.9 | Déplacement joueur (joystick gauche → position + orientation) | 5-7 | ENG.1, ENG.7 | Critique |
-| ENG.10 | Bâton d'aveugle : raycast + direction + collision | 7-9 | ENG.8, ENG.9 | Critique |
-| ENG.11 | Pont bâton → HapticEngine (contact → moteur directionnel) | 8-10 | ENG.10, ENG.3 | Haute |
-| ENG.12 | Pont entités → SpatialAudioEngine (positions → audio) | 8-10 | ENG.7, P0.2 | Haute |
-| ENG.13 | *Intégration PCAudio* (remplacer StubAudio par l'implémentation AUD) | 10-11 | ENG.12, AUD.5 | Haute |
-| ENG.14 | USB CDC : protocole de communication avec IDE | 10-12 | P0.8 | Haute |
-| ENG.15 | Intégration MicroPython (`micropython-embed`) | 12-16 | ENG.4 | Haute |
-| ENG.16 | Module `nathan` Python (bridge C → MicroPython) | 14-17 | ENG.15, P0.5 | Haute |
-| ENG.17 | MiniGameRunner : loader, sandbox, limites mémoire/temps | 16-18 | ENG.16, ENG.4 | Haute |
-| ENG.18 | `NathanMapper` (manette réelle → InputState) | 18-20 | P0.1, ELEC.11 | Critique |
-| ENG.19 | `NathanHaptic` (5 moteurs PWM réels) | 18-20 | P0.3, ELEC.11 | Haute |
-| ENG.20 | Intégration `ESP32Audio` (module audio final sur ESP32) | 20-22 | AUD.8 | Critique |
-| ENG.21 | Tests d'intégration complets sur matériel réel | 22-24 | ENG.18-20, ELEC.14 | Critique |
-| ENG.22 | Optimisation et profiling sur ESP32-S3 | 24-26 | ENG.21 | Haute |
-
-**Jalons ENG :**
-- **SYNC 1 (sem 6) :** GamepadMapper + stubs fonctionnels. Le game engine tourne sur PC/ESP32 avec manette USB, sans son réel, avec logs haptiques.
-- **SYNC 2 (sem 14) :** Scènes, collisions, bâton, déplacement fonctionnels. Audio spatial PC intégré. Le jeu est jouable au casque sur PC avec manette USB.
-- **SYNC 3 (sem 22) :** Tout fonctionne sur hardware réel. NathanMapper + NathanHaptic + ESP32Audio intégrés.
-
----
-
-### 12.5 Workstream AUD — Audio spatial
-
-**Responsable :** 1 développeur spécialisé signal/audio
-**Indépendant de :** ELEC (développement entièrement sur PC jusqu'à Phase 3)
-**Dépend de :** Contrat SpatialAudioEngine (Phase 0)
-
-| ID | Tâche | Semaines | Dépendances | Priorité |
-|----|-------|----------|-------------|----------|
-| AUD.1 | Recherche HRTF : évaluer MIT KEMAR, CIPIC, SOFA | 2-4 | P0.2 | Critique |
-| AUD.2 | Choix de la bibliothèque audio PC (`miniaudio`, `libsoundio`, ou custom) | 2-3 | — | Critique |
-| AUD.3 | Prototype HRTF sur PC : 1 source, convolution basique | 3-5 | AUD.1, AUD.2 | Critique |
-| AUD.4 | Multi-sources : mix de 4-6 sources HRTF simultanées | 5-7 | AUD.3 | Critique |
-| AUD.5 | `PCAudio` : implémentation complète du contrat SpatialAudioEngine sur PC | 6-9 | AUD.4, P0.2 | Critique |
-| AUD.6 | Tests perceptuels au casque (validation immersion) | 8-10 | AUD.5 | Haute |
-| AUD.7 | Benchmark ESP32-S3 : portage convolution HRTF, mesure CPU/latence | 10-14 | AUD.5, P0.7 | Critique |
-| AUD.8 | **Décision : software pur OU DSP externe** | 14 | AUD.7 | Critique |
-| AUD.9a | *(Si software pur)* `ESP32Audio` : implémentation finale I2S + HRTF | 14-20 | AUD.8, ELEC.1 | Critique |
-| AUD.9b | *(Si DSP externe)* Sélection puce DSP, intégration I2S ESP32 → DSP → DAC | 14-20 | AUD.8, ELEC.5 | Critique |
-| AUD.10 | Optimisation : taille filtre, nombre de sources, latence cible < 20ms | 18-22 | AUD.9 | Haute |
-| AUD.11 | Tests sur matériel final (PCB + casque) | 22-24 | AUD.10, ELEC.14 | Haute |
-
-**Jalons AUD :**
-- **SYNC 1 (sem 6) :** HRTF prototype PC fonctionnel (1 source). Premiers résultats de spatialisation au casque.
-- **SYNC 2 (sem 14) :** `PCAudio` complet, 4-6 sources simultanées sur PC. Benchmark ESP32 en cours. Décision software/DSP prise.
-- **SYNC 3 (sem 22) :** `ESP32Audio` fonctionnel sur matériel réel. Prêt pour intégration game engine.
-
----
-
-### 12.6 Workstream JEU — Contenu et design de jeu
-
-**Responsable :** Équipe contenu / game design
-**Utilise :** Game engine (ENG) + PCAudio (AUD) + GamepadMapper sur PC
-**Dépend de :** Scènes et collisions de ENG (sem ~6-8)
-
-| ID | Tâche | Semaines | Dépendances | Priorité |
-|----|-------|----------|-------------|----------|
-| JEU.1 | Design détaillé de la carte de la maison (coordonnées 2D, tailles pièces) | 2-4 | — | Critique |
-| JEU.2 | Liste exhaustive des sons nécessaires (ambiances, effets, voix) | 2-4 | — | Critique |
-| JEU.3 | Sourcing / enregistrement de la banque de sons | 3-10 | JEU.2 | Critique |
-| JEU.4 | Enregistrement narration audio (voix de Nathan, tutoriel) | 6-10 | JEU.1 | Haute |
-| JEU.5 | Salon : placement des entités, ambiance, interactions | 7-9 | JEU.1, JEU.3, ENG.6 | Critique |
-| JEU.6 | Tutoriel intégré (voix Nathan explique les contrôles) | 8-10 | JEU.5, JEU.4 | Haute |
-| JEU.7 | Navigation inter-pièces (signatures musicales par porte) | 8-10 | JEU.5, ENG.12 | Critique |
-| JEU.8 | Cuisine : ambiance + mini-jeu "faire à manger" | 9-12 | JEU.3, ENG.9 | Haute |
-| JEU.9 | Chambre : ambiance + mini-jeux + point de sauvegarde | 9-12 | JEU.3, ENG.6 | Haute |
-| JEU.10 | Salle de musique — guitare (samples + mapping joystick) | 10-14 | JEU.3, ENG.1 | Haute |
-| JEU.11 | Salle de musique — batterie (samples + mapping joystick/gâchettes) | 10-14 | JEU.3, ENG.1 | Haute |
-| JEU.12 | École — navigation bâton en extérieur | 12-16 | JEU.3, ENG.10 | Haute |
-| JEU.13 | École — combats imaginaires | 14-18 | JEU.12, ENG.10 | Moyenne |
-| JEU.14 | Salle de mini-jeux (hub, navigation liste) | 16-18 | ENG.17 | Haute |
-| JEU.15 | 2-3 mini-jeux d'exemple en MicroPython | 18-20 | ENG.16 | Haute |
-| JEU.16 | Tâches quotidiennes additionnelles | 18-22 | JEU.5-JEU.9 | Basse |
-| JEU.17 | Polish : équilibrage, transitions, flow narratif | 22-24 | JEU.5-JEU.16 | Haute |
-| JEU.18 | Test avec utilisateur non-voyant | 24-25 | JEU.17 | Critique |
-| JEU.19 | Ajustements post-test utilisateur | 25-26 | JEU.18 | Critique |
-
-**Jalons JEU :**
-- **SYNC 1 (sem 6) :** Design de la carte complet. Liste des sons établie. Sourcing en cours.
-- **SYNC 2 (sem 14) :** Salon + Cuisine + Chambre jouables sur PC avec audio spatial. Navigation inter-pièces fonctionnelle.
-- **SYNC 3 (sem 22) :** Toutes les pièces fonctionnelles. Mini-jeux d'exemple prêts. Prêt pour tests utilisateur.
-
----
-
-### 12.7 Points de synchronisation détaillés
-
-#### SYNC 1 — Semaine 6 : Validation des fondations
-
-**Réunion toutes équipes. Critères de passage :**
-
-| Équipe | Livrable attendu | Validation |
-|--------|------------------|------------|
-| ELEC | Breadboards fonctionnels (I2S, moteurs, joysticks). Schéma en cours. | Démonstration breadboard |
-| ENG | GamepadMapper + stubs + DebugMapper. Début scènes/collisions. | Démo : déplacement au joystick USB avec logs |
-| AUD | Prototype HRTF PC 1 source. | Écoute au casque : son qui tourne autour de la tête |
-| JEU | Carte de la maison finalisée. Liste des sons. | Document de design validé |
-
-**Décisions à prendre :**
-- Valider/ajuster les contrats d'interface si problèmes détectés
-- Confirmer la liste de composants pour commande PCB
-
-#### SYNC 2 — Semaine 14 : Prototype logiciel complet sur PC
-
-**Réunion toutes équipes. Critères de passage :**
-
-| Équipe | Livrable attendu | Validation |
-|--------|------------------|------------|
-| ELEC | PCB fabriqué, soudé, testé électriquement. | PCB boot ESP-IDF |
-| ENG | Scènes + collisions + bâton + audio intégrés. | Démo : navigation dans le Salon avec son spatial au casque |
-| AUD | PCAudio complet (4-6 sources). Benchmark ESP32 en cours. **Décision software/DSP.** | Rapport benchmark + recommandation |
-| JEU | Salon + Cuisine + Chambre jouables. Navigation inter-pièces. | Démo jouable au casque |
-
-**Décisions à prendre :**
-- **Go/No-go** sur l'approche audio (software pur vs DSP externe)
-- Ajuster le budget si DSP externe nécessaire
-- Priorisation des pièces restantes
-
-#### SYNC 3 — Semaine 22 : Intégration matérielle
-
-**Réunion toutes équipes. Critères de passage :**
-
-| Équipe | Livrable attendu | Validation |
-|--------|------------------|------------|
-| ELEC | Manette complète assemblée (PCB + boîtier + batterie). | Manette physique fonctionnelle |
-| ENG | NathanMapper + NathanHaptic + ESP32Audio intégrés. | Jeu tourne sur manette réelle |
-| AUD | ESP32Audio fonctionnel et optimisé. | Audio spatial correct sur casque depuis la manette |
-| JEU | Toutes pièces + mini-jeux d'exemple. | Jeu complet jouable |
-
-**Décisions à prendre :**
-- Go/No-go pour tests utilisateur
-- Liste de bugs critiques à corriger
-
----
-
-### 12.8 Graphe de dépendances critique
-
-```
-Phase 0 (toutes) ─┬─→ ELEC.1-4 (breadboard) ─→ ELEC.5 (schéma) ─→ ELEC.6-7 (PCB) ─→ ELEC.9-10 (soudure)
-                   │
-                   ├─→ ENG.1 (GamepadMapper) ─→ ENG.9 (déplacement) ─→ ENG.10 (bâton) ──┐
-                   │                                                                       │
-                   ├─→ ENG.2 (StubAudio) ─→ ENG.6 (scènes) ─→ ENG.12 (pont audio) ───────┤
-                   │                                                                       │
-                   ├─→ AUD.1-3 (recherche+proto) ─→ AUD.5 (PCAudio) ─┬─→ ENG.13 ─────────┤
-                   │                                                   │                   │
-                   │                                                   └─→ AUD.7 (bench)   │
-                   │                                                       ─→ AUD.9 (ESP32)│
-                   │                                                                       │
-                   └─→ JEU.1-2 (design) ─→ JEU.3 (sons) ─→ JEU.5 (salon) ───────────────┘
-                                                                                    │
-                                                                                    ▼
-                                                            SYNC 2 (sem 14) : tout converge
-                                                                                    │
-                                                                    ┌───────────────┤
-                                                                    ▼               ▼
-                                                            ENG.18-20         JEU.12-14
-                                                           (NathanMapper)    (école+minijeux)
-                                                                    │               │
-                                                                    └───────┬───────┘
-                                                                            ▼
-                                                                    SYNC 3 (sem 22)
-                                                                            │
-                                                                            ▼
-                                                                    JEU.18-19 (tests DV)
-```
-
-**Chemin critique :** `P0 → AUD.1 → AUD.3 → AUD.5 → AUD.7 → AUD.8 (décision) → AUD.9 → ENG.20 → ENG.21`
-
-Le **goulot d'étranglement** du projet est le **portage audio HRTF sur ESP32-S3**. C'est pourquoi l'équipe AUD commence dès le jour 1 et que la décision software/DSP est prévue à la semaine 14.
-
----
-
-### 12.9 Points de référence avec le code existant (GlassBreaker)
+### 12.2 Points de référence avec le code existant (GlassBreaker)
 
 | Élément v2.0 | Référence dans GlassBreaker | Notes |
 |---|---|---|
@@ -1371,93 +1083,43 @@ Le **goulot d'étranglement** du projet est le **portage audio HRTF sur ESP32-S3
 | HapticEngine | `output/motors.py` (MotorManager) | Passer de 2 à 5 moteurs avec intensité |
 | StorageProvider | `utils/memory.py` (MemoryManager) | Même principe, FAT32 sur SD |
 | MiniGameRunner | `game/menu.py` (MenuExtension) | Même pattern classe + `run()` |
-| Dossier sons | `/sd/sounds/` | Reproduire en `/sd/minigames/<jeu>/sounds/` |
 
 ---
 
 ## 13. Budget
 
-### 13.1 Contrainte budgétaire
+> Le budget détaillé et le suivi financier sont gérés dans `TACHES.md` (section Budget prévisionnel du RPC1).
 
-Budget total : **~500$ CAD** (couvrant prototype + développement)
-Objectif de coût de production unitaire : **< 100$ CAD** pour rendre la console accessible
+**Contrainte budgétaire :** <= 500$ CAD pour le prototype (incluant réserve imprévus ~30%)
+**Objectif de production :** < 100$ CAD par unité
 
-### 13.2 Estimation des coûts hardware prototype
+**Tous les outils logiciels sont gratuits :** SDK du MCU (open-source), MicroPython (MIT), KiCAD, datasets HRTF (MIT KEMAR), Electron (MIT).
 
-| Composant | Quantité | Coût estimé (CAD) |
-|-----------|----------|-------------------|
-| ESP32-S3 DevKit (prototype) | 2 | ~30$ |
-| PCM5102A (DAC module) | 2 | ~15$ |
-| Moteurs vibration ERM 3V | 10 | ~25$ |
-| Joysticks analogiques (type PS2) | 4 | ~20$ |
-| Batterie LiPo 2500 mAh | 2 | ~30$ |
-| Circuit charge TP4056 | 5 | ~10$ |
-| Composants divers (résistances, MOSFET, etc.) | — | ~30$ |
-| PCB fabrication (JLCPCB, 5 exemplaires) | — | ~40$ |
-| Impression 3D filament | — | ~30$ |
-| **Manettes USB de substitution (DualShock/Xbox)** | **2-3** | **~60$** |
-| Casque stéréo (test) | 1 | ~30$ |
-| Câbles, connecteurs, SD card | — | ~20$ |
-| **Total prototype** | | **~340$ CAD** |
-| **Réserve (imprévus 30%)** | | **~100$ CAD** |
-| **Total estimé** | | **~440$ CAD** |
-
-### 13.3 Budget logiciel
-
-- ESP-IDF : **Gratuit** (open-source)
-- MicroPython : **Gratuit** (MIT License)
-- KiCAD : **Gratuit**
-- MIT KEMAR HRTF dataset : **Gratuit** (usage libre)
-- Samples audio : **Gratuit** (sources libres de droits — Freesound.org, etc.)
-- miniaudio (dev PC) : **Gratuit** (MIT License)
+> Le coût exact du prototype dépend du MCU choisi. Une estimation par scénario MCU est réalisée dans le MIP (tâche MIP-03c).
 
 ---
 
 ## 14. Livrables
 
-### 14.1 Livrables hardware (ELEC)
+> La liste complète des livrables par session (académiques + techniques) et leur checklist
+> se trouvent dans `TACHES.md`.
 
-- [ ] Schéma KiCAD v2.0 complet (ESP32-S3)
-- [ ] PCB KiCAD v2.0 (Gerbers prêts)
-- [ ] Modèles SolidWorks boîtier v2.0
-- [ ] Fichiers STL v2.0 pour impression 3D
-- [ ] BOM v2.0 mise à jour
-- [ ] Instructions d'assemblage
+### 14.1 Livrables techniques
 
-### 14.2 Livrables firmware et engine (ENG)
+- Manette physique (PCB + boîtier + batterie) avec le MCU choisi
+- Game engine fonctionnel (scènes, collisions, bâton, navigation, audio spatial)
+- Module audio spatial (PCAudio + implémentation embarquée)
+- Jeu "La Maison de Nathan" (>= 4 zones jouables)
+- Système MicroPython (interpréteur + module `nathan` + sandbox + 2 mini-jeux)
+- IDE de programmation accessible (éditeur + transfert USB + TTS)
+- Documentation (API game engine, API MicroPython, protocole USB CDC)
 
-- [ ] Contrats d'interface (fichiers `.h` validés)
-- [ ] InputMapper : GamepadMapper + DebugMapper + NathanMapper
-- [ ] HapticEngine : StubHaptic + GamepadHaptic + NathanHaptic
-- [ ] Game engine complet (scènes, collisions, bâton, navigation)
-- [ ] Intégration MicroPython + module `nathan`
-- [ ] USB CDC protocole pour IDE NATHAN
-- [ ] Firmware compilé + instructions de flash
+### 14.2 Livrables académiques
 
-### 14.3 Livrables audio (AUD)
-
-- [ ] Rapport de recherche HRTF (choix dataset, taille filtre, performances)
-- [ ] PCAudio : implémentation de test sur PC
-- [ ] ESP32Audio : implémentation embarquée finale
-- [ ] Rapport benchmark ESP32-S3 (CPU, latence, nb sources max)
-- [ ] Rapport décision software vs DSP
-
-### 14.4 Livrables jeu (JEU)
-
-- [ ] Premier jeu "La Maison de Nathan" complet (6 zones)
-- [ ] Banque de sons (samples + musiques d'ambiance)
-- [ ] Narration audio (voix Nathan, tutoriel)
-- [ ] 2-3 mini-jeux d'exemple en MicroPython
-- [ ] Document de game design (carte, mécaniques, flow)
-
-### 14.5 Livrables documentation (TOUTES)
-
-- [ ] Ce cahier des charges (maintenu à jour)
-- [ ] README mis à jour pour v2.0
-- [ ] Documentation API game engine
-- [ ] Documentation API MicroPython (`nathan.*`)
-- [ ] Protocole USB CDC (pour l'intégration l'IDE)
-- [ ] Guide de contribution open-source
+- MIP, RPC1 (S6) — RPC2 (S7) — RLP (S8)
+- RAE individuels (chaque session)
+- Audits d'équipe et numériques
+- Démonstration Expo MégaGÉNIALE (S8)
 
 ---
 
