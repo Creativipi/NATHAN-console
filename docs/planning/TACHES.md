@@ -363,30 +363,34 @@
 ```mermaid
 flowchart TB
     subgraph ENGINE["GAME ENGINE (C/C++) — agnostique du matériel"]
-        IN["InputMap (interface)"]
-        AU["SpatialAudio (interface)"]
-        HP["HapticEngine (interface)"]
-        ST["Storage (interface)"]
+        IN["InputMap<br/>(interface)"]
+        AU["SpatialAudio<br/>(interface)"]
+        HP["HapticEngine<br/>(interface)"]
+        ST["Storage<br/>(interface)"]
     end
-    subgraph PCP["Phase PC · S6 → S7"]
+    subgraph PCP["Phase PC (S6 → S7)"]
         IN_PC["GamepadMapper<br/>PS4 / Xbox"]
         AU_PC["PCAudio HRTF<br/>(lib maison)"]
         HP_PC["GamepadHaptic"]
         ST_PC["PC FileSystem"]
     end
-    subgraph HWP["Phase matériel · S8"]
+    subgraph HWP["Phase matériel (S8)"]
         IN_HW["NathanMapper<br/>ADC + GPIO"]
         AU_HW["EmbeddedAudio<br/>I2S + HRTF"]
         HP_HW["NathanHaptic<br/>5 moteurs"]
         ST_HW["SD Card FAT32"]
     end
-    FPGA["HardwareAudio<br/>FPGA/CPLD · conditionnel"]
-    IN --> IN_PC & IN_HW
-    AU --> AU_PC & AU_HW
-    HP --> HP_PC & HP_HW
-    ST --> ST_PC & ST_HW
+    FPGA["HardwareAudio<br/>FPGA / CPLD<br/>(conditionnel)"]
+    IN --> IN_PC
+    IN --> IN_HW
+    AU --> AU_PC
+    AU --> AU_HW
     AU -.-> FPGA
-    classDef cond stroke-dasharray:5 5,fill:#fff8e1
+    HP --> HP_PC
+    HP --> HP_HW
+    ST --> ST_PC
+    ST --> ST_HW
+    classDef cond fill:#fff8e1,stroke:#e65100
     class FPGA cond
 ```
 
