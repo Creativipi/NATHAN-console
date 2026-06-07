@@ -80,3 +80,14 @@ A console built around sound, for a hero and a community that navigates the worl
 
 ---
 
+## 📚 Documentation & gouvernance
+
+Toute la documentation projet vit dans [`docs/`](./docs/) :
+
+- **[`docs/README.md`](./docs/README.md)** — *commencez ici* (parcours de lecture).
+- **[Journal des décisions — ADR](./docs/decisions/README.md)** — *pourquoi* le projet est ainsi, et son évolution dans le temps.
+- **[Specs](./docs/specs/)** · **[Planification & GANTT](./docs/planning/)** · **[Architecture](./docs/architecture/)**.
+- **[CONTRIBUTING.md](./CONTRIBUTING.md)** — comment contribuer et **tracer une décision**.
+
+---
+

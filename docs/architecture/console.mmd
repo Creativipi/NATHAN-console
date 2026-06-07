@@ -1,0 +1,103 @@
+flowchart TB
+    %% NATHAN — Console — Architecture logicielle
+    %% Convention MIP : haut niveau en haut, bas niveau en bas.
+    %% Stéréotypes UML conservés pour distinguer module / mapper / moteur / runtime.
+
+    %% ============ LÉGENDE ============
+    subgraph LEG[" Légende "]
+        direction TB
+        L1["«module»<br/>Composante logicielle"]:::mod
+        L2["«mapper»<br/>Pont entre couches"]:::mapper
+        L3["«engine»<br/>Moteur principal"]:::engine
+        L4["«périphérique»<br/>Matériel externe"]:::periph
+        L5["«externe»<br/>Composant hors console"]:::ext
+    end
+
+    %% ============ COUCHE 1 — Application (mini-jeux utilisateur) ============
+    subgraph L1_APP["Couche application — mini-jeux utilisateur"]
+        direction LR
+        LOADER["«module»<br/>Chargeur de mini-jeu"]:::mod
+        MPY["«runtime»<br/>Interpréteur MicroPython"]:::mod
+        NAPI["«mapper»<br/>API Nathan"]:::mapper
+    end
+
+    %% ============ COUCHE 2 — Game Engine ============
+    subgraph L2_ENG["Couche cœur du jeu — Game Engine"]
+        direction TB
+        MAIN["«engine»<br/>Moteur principal"]:::engine
+        subgraph L2_SUB[" "]
+            direction LR
+            SCENE["«module»<br/>Gestionnaire de scènes"]:::mod
+            PLAYER["«module»<br/>Contrôleur du joueur"]:::mod
+            BATON["«module»<br/>Contrôleur du bâton"]:::mod
+            COLL["«module»<br/>Détecteur de collisions"]:::mod
+            SPRITES["«module»<br/>Gestionnaire de sprites"]:::mod
+        end
+    end
+
+    %% ============ COUCHE 3 — Mappers de sortie ============
+    INMAP["«mapper»<br/>Mapper d'entrées"]:::mapper
+    AUDMAP["«mapper»<br/>Mapper sprite → audio"]:::mapper
+    HAPMAP["«mapper»<br/>Mapper haptique"]:::mapper
+
+    %% ============ COUCHE 4 — Signal (audio + haptique) ============
+    subgraph L4_SIG["Couche signal — audio + haptique"]
+        direction LR
+        HRTF["«module»<br/>Filtre HRTF"]:::mod
+        MIX["«module»<br/>Mixeur audio"]:::mod
+        FALL["«module»<br/>Mode dégradé L/R"]:::mod
+        HAPMOD["«module»<br/>Module haptique"]:::mod
+    end
+
+    %% ============ COUCHE 5 — Matériel ============
+    subgraph L5_HW["Couche matérielle — manette"]
+        direction LR
+        JOY["«périphérique»<br/>Joysticks + boutons"]:::periph
+        HP["«périphérique»<br/>Casque stéréo"]:::periph
+        MOT["«périphérique»<br/>5 moteurs ERM"]:::periph
+    end
+
+    %% ============ HORS CONSOLE ============
+    STORAGE[("Stockage interne")]:::store
+    IDE["«externe»<br/>IDE — sur PC"]:::ext
+
+    %% ============ FLUX (étiquettes courtes) ============
+    JOY -- "signaux bruts" --> INMAP
+    INMAP -- "évènements jeu" --> MAIN
+
+    MAIN --> SCENE
+    MAIN --> PLAYER
+    MAIN --> BATON
+    MAIN --> COLL
+    MAIN --> SPRITES
+    SCENE -- "sprites de zone" --> SPRITES
+    PLAYER -- "position joueur" --> SPRITES
+    COLL -- "contacts" --> BATON
+
+    SPRITES -- "sprites + position + hauteur + son" --> AUDMAP
+    BATON -- "évènements bâton" --> HAPMAP
+
+    AUDMAP -- "sources audio" --> HRTF
+    HRTF -- "signaux filtrés" --> MIX
+    FALL -. "si CPU saturé" .- HRTF
+    MIX -- "signal binaural" --> HP
+
+    HAPMAP -- "évènements haptiques" --> HAPMOD
+    HAPMOD -- "PWM" --> MOT
+
+    LOADER --> MPY
+    MPY <--> NAPI
+    NAPI -. "appels" .-> MAIN
+    NAPI -. "appels" .-> SPRITES
+    NAPI -. "appels" .-> HAPMAP
+
+    STORAGE -- ".py + sons" --> LOADER
+    IDE -- "archive" --> STORAGE
+
+    %% ============ STYLES ============
+    classDef mod    fill:#DBEAFE,stroke:#1D4ED8,color:#0B2A57;
+    classDef mapper fill:#FEF3C7,stroke:#B45309,color:#3F2A00,stroke-width:1.5px;
+    classDef engine fill:#E0E7FF,stroke:#3730A3,stroke-width:2.5px,color:#1E1B4B;
+    classDef periph fill:#E5E7EB,stroke:#6B7280,color:#111827;
+    classDef ext    fill:#FFFFFF,stroke:#111827,stroke-dasharray:5 3,color:#111827;
+    classDef store  fill:#E9F8EC,stroke:#15803D,color:#0F3E1F;

@@ -1,0 +1,98 @@
+flowchart TB
+    %% NATHAN — IDE — Architecture logicielle
+    %% Convention MIP : haut niveau en haut, bas niveau en bas.
+    %% Stéréotypes UML conservés pour distinguer module / mapper / runtime.
+
+    %% ============ LÉGENDE ============
+    subgraph LEG[" Légende "]
+        direction TB
+        L1["«module»<br/>Composante logicielle"]:::mod
+        L2["«mapper»<br/>Pont entre couches"]:::mapper
+        L3["«périphérique»<br/>Matériel externe"]:::periph
+        L4["«externe»<br/>Composant hors IDE"]:::ext
+        L5["«stockage»<br/>Données persistantes"]:::store
+    end
+
+    %% ============ COUCHE 1 — UX accessible ============
+    subgraph L1_UX["Couche UX accessible"]
+        direction LR
+        STT["«module»<br/>STT"]:::mod
+        VSHELL["«module»<br/>Shell vocal"]:::mod
+        EDITOR["«module»<br/>Éditeur de code"]:::mod
+        TTS["«module»<br/>TTS"]:::mod
+    end
+
+    %% ============ COUCHE 2 — Cœur d'édition ============
+    subgraph L2_EDIT["Couche édition"]
+        direction LR
+        PROJ["«module»<br/>Gestionnaire de projet"]:::mod
+        PARSER["«module»<br/>Analyseur syntaxique"]:::mod
+        LINT["«module»<br/>Linter"]:::mod
+        SNIP["«module»<br/>Bibliothèque de modèles"]:::mod
+    end
+
+    %% ============ COUCHE 3 — Assistant IA ============
+    subgraph L3_AI["Couche assistant IA"]
+        direction LR
+        CTXB["«mapper»<br/>Constructeur de contexte"]:::mapper
+        LLM["«module»<br/>Connecteur LLM"]:::mod
+        VAL["«mapper»<br/>Validateur de réponse"]:::mapper
+        EXEC["«module»<br/>Exécuteur d'actions"]:::mod
+    end
+
+    %% ============ COUCHE 4 — Déploiement ============
+    subgraph L4_DEP["Couche déploiement"]
+        direction LR
+        PACK["«mapper»<br/>Empaqueteur"]:::mapper
+        UPLOAD["«module»<br/>Téléverseur"]:::mod
+        LOGRX["«module»<br/>Récepteur de logs"]:::mod
+    end
+
+    %% ============ COUCHE 5 — Matériel + externe ============
+    subgraph L5_HW["Couche matérielle"]
+        direction LR
+        KB["«périphérique»<br/>Clavier"]:::periph
+        MIC["«périphérique»<br/>Microphone"]:::periph
+        SPK["«périphérique»<br/>Haut-parleur"]:::periph
+    end
+
+    PSTORE[("Projets locaux")]:::store
+    SLIB[("Bibliothèque mini-jeux types")]:::store
+    CONSOLE["«externe»<br/>Console NATHAN"]:::ext
+
+    %% ============ FLUX ============
+    MIC -- "flux audio" --> STT
+    STT -- "texte" --> VSHELL
+    KB -- "événements clavier" --> EDITOR
+    TTS -- "audio" --> SPK
+
+    EDITOR <--> PROJ
+    EDITOR --> PARSER
+    PARSER --> LINT
+    LINT -- "diagnostics" --> TTS
+    SNIP -. "modèles" .-> EDITOR
+    SLIB -. "templates" .-> SNIP
+    PSTORE <--> PROJ
+
+    VSHELL -- "intention" --> CTXB
+    PROJ -- "code courant" --> CTXB
+    EXEC -- "catalogue fonctions" --> CTXB
+    CTXB -- "prompt" --> LLM
+    LLM -- "réponse" --> VAL
+    VAL -- "action structurée" --> EXEC
+    VAL -. "erreurs" .-> TTS
+    EXEC -- "diff de code" --> EDITOR
+    EXEC -- "ordre déploiement" --> PACK
+
+    PROJ -- "fichiers" --> PACK
+    PACK -- "archive" --> UPLOAD
+    UPLOAD -- "archive" --> CONSOLE
+    CONSOLE -- "logs" --> LOGRX
+    LOGRX -- "texte" --> TTS
+
+    %% ============ STYLES ============
+    classDef mod    fill:#DBEAFE,stroke:#1D4ED8,color:#0B2A57;
+    classDef mapper fill:#FEF3C7,stroke:#B45309,color:#3F2A00,stroke-width:1.5px;
+    classDef periph fill:#E5E7EB,stroke:#6B7280,color:#111827;
+    classDef ext    fill:#FFFFFF,stroke:#111827,stroke-dasharray:5 3,color:#111827;
+    classDef store  fill:#E9F8EC,stroke:#15803D,color:#0F3E1F;

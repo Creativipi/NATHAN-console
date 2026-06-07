@@ -1,0 +1,202 @@
+<mxfile host="app.diagrams.net" agent="nathan-converter">
+  <diagram name="console" id="p1">
+    <mxGraphModel dx="2280" dy="1257" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2500" pageHeight="2000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="LEG" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#444444;dashed=1;verticalAlign=top;fontStyle=1;fontColor=#222222;" value="Légende" vertex="1">
+          <mxGeometry height="120" width="1160" x="30" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="L1" parent="LEG" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;fontColor=#0B2A57;strokeWidth=1;" value="«module»&lt;br&gt;Composante logicielle" vertex="1">
+          <mxGeometry height="60" width="200" x="30" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="L2" parent="LEG" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#B45309;fontColor=#3F2A00;strokeWidth=2;" value="«mapper»&lt;br&gt;Pont entre couches" vertex="1">
+          <mxGeometry height="60" width="200" x="255" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="L3" parent="LEG" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E0E7FF;strokeColor=#3730A3;fontColor=#1E1B4B;strokeWidth=3;" value="«engine»&lt;br&gt;Moteur principal" vertex="1">
+          <mxGeometry height="60" width="200" x="480" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="L4" parent="LEG" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E5E7EB;strokeColor=#6B7280;fontColor=#111827;strokeWidth=1;" value="«périphérique»&lt;br&gt;Matériel externe" vertex="1">
+          <mxGeometry height="60" width="200" x="705" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="L5" parent="LEG" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#111827;fontColor=#111827;strokeWidth=1;dashed=1;" value="«externe»&lt;br&gt;Composant hors console" vertex="1">
+          <mxGeometry height="60" width="200" x="930" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="L1_APP" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#444444;dashed=1;verticalAlign=top;fontStyle=1;fontColor=#222222;" value="Couche application — mini-jeux utilisateur" vertex="1">
+          <mxGeometry height="120" width="530" x="1380" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="LOADER" parent="L1_APP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;fontColor=#0B2A57;strokeWidth=1;" value="«module»&lt;br&gt;Chargeur de mini-jeu" vertex="1">
+          <mxGeometry height="60" width="149.29577464788733" x="22.3943661971831" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="MPY" parent="L1_APP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;fontColor=#0B2A57;strokeWidth=1;" value="«runtime»&lt;br&gt;Interpréteur MicroPython" vertex="1">
+          <mxGeometry height="60" width="149.29577464788733" x="190.35211267605635" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="L2_ENG" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#444444;dashed=1;verticalAlign=top;fontStyle=1;fontColor=#222222;" value="Couche cœur du jeu — Game Engine" vertex="1">
+          <mxGeometry height="300" width="1780" x="180" y="1170" as="geometry" />
+        </mxCell>
+        <mxCell id="L2_SUB" parent="L2_ENG" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#444444;dashed=1;verticalAlign=top;fontStyle=1;fontColor=#222222;" value="" vertex="1">
+          <mxGeometry height="135.8490566037736" width="1692.4590163934427" x="30.00049180327869" y="130.18867924528303" as="geometry" />
+        </mxCell>
+        <mxCell id="SCENE" parent="L2_SUB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;fontColor=#0B2A57;strokeWidth=1;" value="«module»&lt;br&gt;Gestionnaire de scènes" vertex="1">
+          <mxGeometry height="67.9245283018868" width="291.8032786885246" x="43.77049180327869" y="33.9622641509434" as="geometry" />
+        </mxCell>
+        <mxCell id="PLAYER" parent="L2_SUB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;fontColor=#0B2A57;strokeWidth=1;" value="«module»&lt;br&gt;Contrôleur du joueur" vertex="1">
+          <mxGeometry height="67.9245283018868" width="291.8032786885246" x="372.04918032786884" y="33.9622641509434" as="geometry" />
+        </mxCell>
+        <mxCell id="BATON" parent="L2_SUB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;fontColor=#0B2A57;strokeWidth=1;" value="«module»&lt;br&gt;Contrôleur du bâton" vertex="1">
+          <mxGeometry height="67.9245283018868" width="291.8032786885246" x="700.327868852459" y="33.9622641509434" as="geometry" />
+        </mxCell>
+        <mxCell id="COLL" parent="L2_SUB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;fontColor=#0B2A57;strokeWidth=1;" value="«module»&lt;br&gt;Détecteur de collisions" vertex="1">
+          <mxGeometry height="67.9245283018868" width="291.8032786885246" x="1028.6065573770493" y="33.9622641509434" as="geometry" />
+        </mxCell>
+        <mxCell id="SPRITES" parent="L2_SUB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;fontColor=#0B2A57;strokeWidth=1;" value="«module»&lt;br&gt;Gestionnaire de sprites" vertex="1">
+          <mxGeometry height="67.9245283018868" width="291.8032786885246" x="1356.8852459016393" y="33.9622641509434" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_8" edge="1" parent="L2_SUB" source="PLAYER" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="SPRITES" value="position joueur">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="518" y="130.18867924528303" />
+              <mxPoint x="1503" y="130.18867924528303" />
+            </Array>
+            <mxPoint x="663.8524590163934" y="152.83018867924528" as="sourcePoint" />
+            <mxPoint x="1356.8852459016393" y="152.83018867924528" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_7" edge="1" parent="L2_SUB" source="SCENE" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="SPRITES" value="sprites de zone">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="190" y="152.83018867924528" />
+              <mxPoint x="1503" y="152.83018867924528" />
+            </Array>
+            <mxPoint x="326.23377049180306" y="209.43396226415095" as="sourcePoint" />
+            <mxPoint x="1526.2295081967213" y="100.75471698113208" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MAIN" parent="L2_ENG" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E0E7FF;strokeColor=#3730A3;fontColor=#1E1B4B;strokeWidth=3;" value="«engine»&lt;br&gt;Moteur principal" vertex="1">
+          <mxGeometry height="67.9245283018868" width="291.8032786885246" x="43.77049180327869" y="33.9622641509434" as="geometry" />
+        </mxCell>
+        <mxCell id="L5_HW" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#444444;dashed=1;verticalAlign=top;fontStyle=1;fontColor=#222222;" value="Couche matérielle — manette" vertex="1">
+          <mxGeometry height="120" width="710" x="30" y="755" as="geometry" />
+        </mxCell>
+        <mxCell id="JOY" parent="L5_HW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E5E7EB;strokeColor=#6B7280;fontColor=#111827;strokeWidth=1;" value="«périphérique»&lt;br&gt;Joysticks + boutons" vertex="1">
+          <mxGeometry height="60" width="200" x="30" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HP" parent="L5_HW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E5E7EB;strokeColor=#6B7280;fontColor=#111827;strokeWidth=1;" value="«périphérique»&lt;br&gt;Casque stéréo" vertex="1">
+          <mxGeometry height="60" width="200" x="255" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="MOT" parent="L5_HW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E5E7EB;strokeColor=#6B7280;fontColor=#111827;strokeWidth=1;" value="«périphérique»&lt;br&gt;5 moteurs ERM" vertex="1">
+          <mxGeometry height="60" width="200" x="480" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="INMAP" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#B45309;fontColor=#3F2A00;strokeWidth=2;" value="«mapper»&lt;br&gt;Mapper d&#39;entrées" vertex="1">
+          <mxGeometry height="60" width="200" x="60" y="960" as="geometry" />
+        </mxCell>
+        <mxCell id="AUDMAP" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#B45309;fontColor=#3F2A00;strokeWidth=2;" value="«mapper»&lt;br&gt;Mapper sprite → audio" vertex="1">
+          <mxGeometry height="60" width="200" x="990" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="HAPMAP" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#B45309;fontColor=#3F2A00;strokeWidth=2;" value="«mapper»&lt;br&gt;Mapper haptique" vertex="1">
+          <mxGeometry height="60" width="200" x="724.1" y="920" as="geometry" />
+        </mxCell>
+        <mxCell id="STORAGE" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#E9F8EC;strokeColor=#15803D;fontColor=#0F3E1F;" value="Stockage interne" vertex="1">
+          <mxGeometry height="60" width="200" x="1270" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="IDE" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#111827;fontColor=#111827;strokeWidth=1;dashed=1;" value="«externe»&lt;br&gt;IDE — sur PC" vertex="1">
+          <mxGeometry height="60" width="200" x="990" y="970" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_0" edge="1" parent="1" source="JOY" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="INMAP" value="signaux bruts">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_1" edge="1" parent="1" source="INMAP" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="MAIN" value="évènements jeu">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_2" edge="1" parent="1" source="MAIN" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="SCENE" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_3" edge="1" parent="1" source="MAIN" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="PLAYER" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_4" edge="1" parent="1" source="MAIN" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="BATON" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_5" edge="1" parent="1" source="MAIN" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="COLL" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_6" edge="1" parent="1" source="MAIN" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="SPRITES" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_9" edge="1" parent="1" source="COLL" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;exitX=0.25;exitY=0;exitDx=0;exitDy=0;" target="BATON" value="contacts">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1312" y="1250" />
+              <mxPoint x="1234" y="1250" />
+              <mxPoint x="1234" y="1368" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_10" edge="1" parent="1" source="SPRITES" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="AUDMAP" value="sprites + position + hauteur + son">
+          <mxGeometry relative="1" x="0.2185" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1872" y="1368" />
+              <mxPoint x="1872" y="640" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_11" edge="1" parent="1" source="BATON" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;exitX=0.25;exitY=0;exitDx=0;exitDy=0;" target="HAPMAP" value="évènements bâton">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="997" y="1210" />
+              <mxPoint x="824" y="1210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_12" edge="1" parent="1" source="AUDMAP" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="HRTF" value="sources audio">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_13" edge="1" parent="1" source="HRTF" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="MIX" value="signaux filtrés">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_14" edge="1" parent="1" source="FALL" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;dashed=1;" target="HRTF" value="si CPU saturé">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_15" edge="1" parent="1" source="MIX" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="HP" value="signal binaural">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="435" y="600" />
+              <mxPoint x="385" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge_16" edge="1" parent="1" source="HAPMAP" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="HAPMOD" value="évènements haptiques">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_17" edge="1" parent="1" source="HAPMOD" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="MOT" value="PWM">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_18" edge="1" parent="1" source="LOADER" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="MPY" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_23" edge="1" parent="1" source="STORAGE" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="LOADER" value=".py + sons">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_24" edge="1" parent="1" source="IDE" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="STORAGE" value="archive">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="L4_SIG" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#444444;dashed=1;verticalAlign=top;fontStyle=1;fontColor=#222222;" value="Couche signal — audio + haptique" vertex="1">
+          <mxGeometry height="120" width="935" x="80" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="HRTF" parent="L4_SIG" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;fontColor=#0B2A57;strokeWidth=1;" value="«module»&lt;br&gt;Filtre HRTF" vertex="1">
+          <mxGeometry height="60" width="200" x="30" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="MIX" parent="L4_SIG" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;fontColor=#0B2A57;strokeWidth=1;" value="«module»&lt;br&gt;Mixeur audio" vertex="1">
+          <mxGeometry height="60" width="200" x="255" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FALL" parent="L4_SIG" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;fontColor=#0B2A57;strokeWidth=1;" value="«module»&lt;br&gt;Mode dégradé L/R" vertex="1">
+          <mxGeometry height="60" width="200" x="480" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HAPMOD" parent="L4_SIG" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;fontColor=#0B2A57;strokeWidth=1;" value="«module»&lt;br&gt;Module haptique" vertex="1">
+          <mxGeometry height="60" width="200" x="705" y="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
