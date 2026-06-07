@@ -360,65 +360,100 @@
 
 ## Architecture en blocs et interfaces
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│                        GAME ENGINE (C/C++)                       │
-│    Scènes, Collisions, Bâton, Navigation, Logique de jeu        │
-│    ┌──────────┐  ┌──────────────┐  ┌───────────┐  ┌──────────┐ │
-│    │ InputMap │  │ SpatialAudio │  │ HapticEng │  │ Storage  │ │
-│    │ INTERFACE│  │  INTERFACE   │  │ INTERFACE │  │ INTERFACE│ │
-│    └────┬─────┘  └──────┬───────┘  └─────┬─────┘  └────┬─────┘ │
-└─────────┼───────────────┼────────────────┼──────────────┼────────┘
-    ┌─────┴─────┐   ┌─────┴─────┐   ┌─────┴─────┐  ┌────┴─────┐
-    │ Gamepad   │   │  PCAudio  │   │ Gamepad   │  │ PC File  │   PHASE PC
-    │ Mapper    │   │  (HRTF)   │   │ Haptic    │  │ System   │   (S6→S7)
-    └───────────┘   └───────────┘   └───────────┘  └──────────┘
-          ↑ Même interface — swap d'implémentation ↓               PHASE MATÉRIEL
-    ┌───────────┐   ┌───────────┐   ┌───────────┐  ┌──────────┐   (S8)
-    │ Nathan    │   │ Embarqué  │   │ Nathan    │  │ SD Card  │
-    │ Mapper    │   │ Audio     │   │ Haptic    │  │ FAT32    │
-    └───────────┘   └───────────┘   └───────────┘  └──────────┘
+```mermaid
+flowchart TB
+    subgraph ENGINE["GAME ENGINE (C/C++) — agnostique du matériel"]
+        IN["InputMap (interface)"]
+        AU["SpatialAudio (interface)"]
+        HP["HapticEngine (interface)"]
+        ST["Storage (interface)"]
+    end
+    subgraph PCP["Phase PC · S6 → S7"]
+        IN_PC["GamepadMapper<br/>PS4 / Xbox"]
+        AU_PC["PCAudio HRTF<br/>(lib maison)"]
+        HP_PC["GamepadHaptic"]
+        ST_PC["PC FileSystem"]
+    end
+    subgraph HWP["Phase matériel · S8"]
+        IN_HW["NathanMapper<br/>ADC + GPIO"]
+        AU_HW["EmbeddedAudio<br/>I2S + HRTF"]
+        HP_HW["NathanHaptic<br/>5 moteurs"]
+        ST_HW["SD Card FAT32"]
+    end
+    FPGA["HardwareAudio<br/>FPGA/CPLD · conditionnel"]
+    IN --> IN_PC & IN_HW
+    AU --> AU_PC & AU_HW
+    HP --> HP_PC & HP_HW
+    ST --> ST_PC & ST_HW
+    AU -.-> FPGA
+    classDef cond stroke-dasharray:5 5,fill:#fff8e1
+    class FPGA cond
 ```
 
 **Le game engine ne sait jamais s'il parle à une manette Xbox ou à la manette NATHAN.** C'est ce qui permet de développer le jeu complet sur PC avant d'avoir choisi le microcontrôleur (voir [ADR-0001]).
 
 > L'interface `SpatialAudioEngine` admet une **3ᵉ implémentation conditionnelle** — `HardwareAudio` (FPGA/CPLD, **Bloc 2b**, [ADR-0004]) — à côté de `PCAudio` et `EmbeddedAudio`.
 
-## Flux parallèles (S6 → T4 → S7 → T5 → S8)
+## Échéancier visuel (Gantt) — flux parallèles S6 → S8
 
-```
-        S6 (été 26)            T4 (stage)      S7 (hiver 27)        T5 (stage)    S8 (aut. 27)
-        s6-7: MIP              ──────────      ─────────────        ──────────    ────────────
-        s8-15: TECHNIQUE
-ENG     interfaces(s8)         raffinement     bâton+benchmark      —             NathanMapper
-        +mapper+engine+JeuV1   +harness        +intégration                       +audio embarqué
-AUD     proto→multi-src        maturation      PCAudio complet      —             portage MCU
-        +benchmark prél.       PCAudio         +DÉCISION audio
-ELEC    (MIP-08 comparatif)    PCB prélim      breadboard→schéma    —             soudure
-(PCB)                          +MCU recens.    →layout→fab
-ELEC    mockup CAD (1 pers.)   polish +        conception interne   —             impression
-(boît.) +impressions           consult. DV     (dépend PCB)                       +assemblage
-JEU     —                      design+sons     zones+narration      finition      école+mini-jeux
-                               production       (avec contenu T4)    sons          +tests DV
-IDE     —                      —               stack+AI+TTS/STT      raffinement   intégration
-                                               +accessibilité+USB                 +polish
-DV      Discord+process        recrutement     consultations …………… (continu) ……  tests formels
-                               +1ʳᵉ consult.
+```mermaid
+gantt
+    title NATHAN Console — échéancier S6 → S8
+    dateFormat YYYY-MM-DD
+    axisFormat %b %Y
+    section S6 été 2026
+    MIP (rédaction + formative)        :active, 2026-06-08, 2026-06-18
+    Remise finale du MIP               :milestone, 2026-06-18, 0d
+    Interfaces gelées                  :milestone, 2026-06-29, 0d
+    Blitz audio + game engine          :active, 2026-06-22, 2026-08-14
+    Boîtier (mockup ergonomie)         :2026-06-22, 2026-08-07
+    RPC1 (rédaction)                   :2026-06-22, 2026-08-14
+    Jeu V1 jouable sur PC              :milestone, 2026-08-14, 0d
+    section T4 stage automne 2026
+    Maturation audio + engine          :2026-09-08, 2026-12-18
+    PCB préliminaire + recensement MCU :2026-09-08, 2026-12-18
+    Contenu de jeu + sons              :2026-09-29, 2026-12-18
+    Recrutement + consultations DV     :2026-09-28, 2026-12-18
+    Convention de partenariat signée   :milestone, 2026-09-25, 0d
+    section S7 hiver 2027
+    Lib audio complète + intégration   :2027-01-05, 2027-01-29
+    Benchmark PC                       :crit, 2027-01-22, 2027-01-29
+    Choix du MCU                       :milestone, crit, 2027-02-08, 0d
+    Breadboard, schéma, layout PCB     :crit, 2027-02-08, 2027-04-02
+    Fabrication PCB (externe)          :crit, 2027-03-29, 2027-04-23
+    IDE accessible (stack a USB)       :2027-01-05, 2027-04-09
+    Zones de jeu + narration           :2027-01-05, 2027-03-12
+    Remise du RPC2                     :milestone, 2027-04-26, 0d
+    section T5 stage été 2027
+    Finalisation contenu et sons       :2027-05-03, 2027-08-13
+    Option HDL audio FPGA              :2027-05-03, 2027-08-13
+    section S8 automne 2027
+    Soudure PCB + tests                :crit, 2027-08-30, 2027-09-18
+    Portage audio embarqué             :2027-08-30, 2027-10-09
+    NathanMapper/Haptic + boîtier      :2027-09-13, 2027-10-22
+    Manette NATHAN opérationnelle      :milestone, 2027-10-09, 0d
+    Intégration + tests DV             :crit, 2027-10-11, 2027-10-29
+    Expo MégaGÉNIALE                   :milestone, crit, 2027-11-27, 0d
+    RLP (rapport de livraison)         :2027-11-01, 2027-12-11
 ```
 
 ## Chemin critique (le plus long — hardware)
 
-```
-MIP déposé (2026-06-18)
- → Interfaces gelées (2026-06-29, s8)
-   → Engine + Audio sur PC (blitz S6 s8-15 + maturation T4)
-     → Benchmark PC (2027-01, S7 s3-4)
-       → ◆ Choix MCU (2027-02-08, S7 s5)
-         → Breadboard (s6-9) → Schéma KiCAD (s7-11) → Layout PCB (s10-13)
-           → Fabrication PCB (2-3 sem, externe) → Soudure+tests (S8 s1-3)
-             → NathanMapper/Haptic + audio embarqué (S8 s3-6)
-               → ◆ Transition manette (S8 s6) → Intégration (S8 s8)
-                 → Tests DV (S8 s8-9) → Expo (2027-11-27/28)
+```mermaid
+flowchart LR
+    A["MIP déposé<br/>18 juin 2026"] --> B["Interfaces gelées<br/>29 juin"]
+    B --> C["Engine + Audio sur PC<br/>blitz S6 + maturation T4"]
+    C --> D["Benchmark PC<br/>S7 · jan. 2027"]
+    D --> E["Choix du MCU<br/>8 fév. 2027"]
+    E --> F["Breadboard → schéma → layout PCB<br/>S7"]
+    F --> G["Fabrication PCB<br/>2-3 sem · externe"]
+    G --> H["Soudure + tests<br/>S8 · sept. 2027"]
+    H --> I["NathanMapper/Haptic<br/>+ audio embarqué"]
+    I --> J["Transition manette<br/>S8"]
+    J --> K["Intégration + tests DV"]
+    K --> L["Expo MégaGÉNIALE<br/>27-28 nov. 2027"]
+    classDef pivot fill:#ffe0b2,stroke:#e65100,stroke-width:2px
+    class E,J pivot
 ```
 
 **Goulots non compressibles :** S6 (10 sem pour MIP+RPC1+blitz) · benchmark PC · choix MCU · fabrication PCB (`H-16`) · portage audio embarqué (`S8-T02`) · approbation CER (≥ 4 sem) · **convention de partenariat** (gèle le recrutement DV) · **[conditionnel]** décharge audio FPGA (`AUDHW-03/04/05`).
