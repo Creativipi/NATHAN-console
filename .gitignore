@@ -1,0 +1,4 @@
+# Artefacts KiCAD / build / OS
+*.lck
+*.stackdump
+CAD_Files/PCB/NATHAN-console_KiCAD.kicad_pro/NATHAN-console-backups/
