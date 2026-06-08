@@ -83,7 +83,7 @@
 
 | ID | Hypothèse | Statut | Validation prévue | Plan de contingence |
 |----|-----------|--------|-------------------|---------------------|
-| H-24 | **Équipe stable** : les 7 membres restent actifs, dont >= 1 GE et >= 1 spécialisé signal/audio | Active | Formation des équipes (S6 sem 1) | Redistribuer les responsabilités; confier le PCB à un GI expérimenté si pas de GE |
+| H-24 | **Équipe stable** : les 8 membres restent actifs, dont >= 1 GE et >= 1 spécialisé signal/audio | Active | Formation des équipes (S6 sem 1) | Redistribuer les responsabilités; confier le PCB à un GI expérimenté si pas de GE |
 | H-25 | **Laboratoires accessibles** : labos de la Faculté disponibles (l'équipe a ses propres imprimantes 3D) | Active | Réservation des locaux (S7-S8) | Réserver tôt; utiliser les imprimantes de l'équipe comme solution principale |
 | H-26 | **Composants en stock** : disponibles chez les fournisseurs (DigiKey, Mouser, Amazon), livrables en <= 2 semaines | Active | À chaque commande | Commander en avance; identifier des composants alternatifs (second source) |
 | H-27 | **Budget suffisant** : 500$ couvre le prototype complet (imprévus inclus) | Active | Suivi financier continu | Réduire le périmètre (3 moteurs au lieu de 5); financement additionnel; composants récupérés |

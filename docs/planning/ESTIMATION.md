@@ -437,27 +437,27 @@ Le **mode d'assemblage n'est pas encore tranché** ; les deux options sont chiff
 
 1. **Le plafond est imposé, pas estimé.** Le cours fixe ~135 h par tranche de 3 crédits et par
    personne (`C-17`). Sur les 3 sessions (3 + 6 + 3 crédits) cela fait **540 h par personne**, et
-   avec 7 membres : **540 × 7 = 3780 h**. C'est un *budget d'heures fermé* — on ne peut pas en
+   avec 8 membres : **540 × 8 = 4320 h**. C'est un *budget d'heures fermé* — on ne peut pas en
    ajouter, seulement décider comment les répartir.
-2. **La répartition, elle, est notre estimation.** On distribue ces 3780 h entre les 6 flux de
+2. **La répartition, elle, est notre estimation.** On distribue ces 4320 h entre les 6 flux de
    travail (les colonnes du diagramme de `TACHES.md`) plus la gestion académique, au prorata de
    l'ampleur de chaque flux. Les pourcentages ci-dessous sont des jugements d'équipe à affiner au
    suivi hebdomadaire (tolérance ± 20 %, `H-14`).
 
-> *Lecture d'une ligne :* « Flux A — 560 h, 15 % » signifie qu'on estime que le moteur de jeu
-> mobilisera environ 15 % de l'effort total, soit 560 h cumulées sur les 7 personnes et 3 sessions
+> *Lecture d'une ligne :* « Flux A — 640 h, 15 % » signifie qu'on estime que le moteur de jeu
+> mobilisera environ 15 % de l'effort total, soit 640 h cumulées sur les 8 personnes et 3 sessions
 > (≈ 80 h par personne si une seule s'en occupait, ou ≈ 20 h chacune si réparti sur 4 personnes).
 
 | Flux / poste | Heures estimées | Part |
 |--------------|-----------------|------|
-| Gestion & livrables académiques (MIP, RPC1/2, RLP, RAE, réunions, audits, tableaux de bord) | ~900h | 24 % |
-| Flux A — Game engine (ENG) | ~560h | 15 % |
-| Flux B — Audio HRTF (AUD) | ~560h | 15 % |
-| Flux C — Hardware (ELEC) | ~520h | 14 % |
-| Flux D — Contenu de jeu (JEU) | ~480h | 13 % |
-| Flux E — IDE accessible (ENG) | ~560h | 15 % |
-| Flux F — Communauté DV + éthique | ~200h | 5 % |
-| **Total** | **~3780h** | **100 %** |
+| Gestion & livrables académiques (MIP, RPC1/2, RLP, RAE, réunions, audits, tableaux de bord) | ~1030h | 24 % |
+| Flux A — Game engine (ENG) | ~640h | 15 % |
+| Flux B — Audio HRTF (AUD) | ~640h | 15 % |
+| Flux C — Hardware (ELEC) | ~590h | 14 % |
+| Flux D — Contenu de jeu (JEU) | ~550h | 13 % |
+| Flux E — IDE accessible (ENG) | ~640h | 15 % |
+| Flux F — Communauté DV + éthique | ~230h | 5 % |
+| **Total** | **~4320h** | **100 %** |
 
 ### 6.1 Surcoût d'effort de portage selon la gamme
 

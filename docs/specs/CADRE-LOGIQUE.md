@@ -54,7 +54,7 @@
 
 | Niveaux descriptifs | Indicateurs objectivement vérifiables | Moyens de vérification | Conditions critiques |
 |---|---|---|---|
-| **I1. Équipe de 7 étudiants (GE + GI)** | 7 membres actifs; 135h/personne en S6 (945h équipe), 540h/personne sur les 3 sessions; >= 1 GE, >= 1 GI signal/audio, >= 2 GI firmware | Feuilles de temps hebdomadaires; matrice de compétences | Pas d'abandon; membres inscrits à PMC660 |
+| **I1. Équipe de 8 étudiants (GE + GI)** | 8 membres actifs; 135h/personne en S6 (1080h équipe), 540h/personne sur les 3 sessions; >= 1 GE, >= 1 GI signal/audio, >= 2 GI firmware | Feuilles de temps hebdomadaires; matrice de compétences | Pas d'abandon; membres inscrits à PMC660 |
 | **I2. Budget <= 500$ CAD** | Achats tracés; réserve imprévus 30% (100$) planifiée | Tableau de suivi financier; factures conservées | Financement confirmé (autofinancement ou partenaire) |
 | **I3. Matériel de développement initial** | >= 2 manettes USB (PS4/Xbox); casque stéréo; achetés avant sem 3 | Confirmation de réception | Livraison <= 2 semaines |
 | **I4. Matériel MCU et prototypage** | DevKit du MCU choisi + DAC + moteurs + joysticks + batterie; achetés après le choix du MCU (S7, après benchmark) | Confirmation de commande post-SYNC 2 | Composants disponibles chez les fournisseurs |

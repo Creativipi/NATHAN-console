@@ -28,13 +28,13 @@
 
 ## Calendrier de référence
 
-| Période | Code | Type | Début | Fin | Capacité/pers | Capacité équipe (7) |
+| Période | Code | Type | Début | Fin | Capacité/pers | Capacité équipe (8) |
 |---------|------|------|-------|-----|---------------|---------------------|
-| Été 2026 | **S6** | Session PMC660 (3 cr) | 2026-05-04 | 2026-08-14 | 9 h/sem (135 h) | **945 h** |
-| Automne 2026 | **T4** | **Stage** | 2026-09-08 | 2026-12-18 | ~4 h/sem (~60 h) | **~420 h** (réduit) |
-| Hiver 2027 | **S7** | Session PMC760 (6 cr) | 2027-01-05 | 2027-04-30 | 18 h/sem (270 h) | **1890 h** |
-| Été 2027 | **T5** | **Stage** | 2027-05-03 | 2027-08-13 | ~4 h/sem (~60 h) | **~420 h** (réduit) |
-| Automne 2027 | **S8** | Session PMC860 (3 cr) | 2027-08-30 | 2027-12-23 | 9 h/sem (135 h) | **945 h** |
+| Été 2026 | **S6** | Session PMC660 (3 cr) | 2026-05-04 | 2026-08-14 | 9 h/sem (135 h) | **1080 h** |
+| Automne 2026 | **T4** | **Stage** | 2026-09-08 | 2026-12-18 | ~4 h/sem (~60 h) | **~480 h** (réduit) |
+| Hiver 2027 | **S7** | Session PMC760 (6 cr) | 2027-01-05 | 2027-04-30 | 18 h/sem (270 h) | **2160 h** |
+| Été 2027 | **T5** | **Stage** | 2027-05-03 | 2027-08-13 | ~4 h/sem (~60 h) | **~480 h** (réduit) |
+| Automne 2027 | **S8** | Session PMC860 (3 cr) | 2027-08-30 | 2027-12-23 | 9 h/sem (135 h) | **1080 h** |
 
 **⚠️ Re-calage au 8 juin.** Le plan est dressé en semaine 6. Les semaines 1-5 (mai → 5 juin) sont **passées** : seules les tâches réellement faites y restent (`[x]`). Tout le reste démarre **≥ 8 juin**. Conséquence : la S6 utile = **semaines 6-15 (~10 sem)**, dont 6-7 dédiées au MIP → le **technique ne démarre qu'en semaine 8** (22 juin).
 
@@ -336,13 +336,13 @@
 
 | Période | Capacité équipe | Charge planifiée (est.) | Lecture |
 |---------|-----------------|-------------------------|---------|
-| **S6** | 945 h (945 h nominal, mais ~630 h **restantes** s6-15) | **~750-850 h** | 🔴 **Sur-souscrite** : MIP (s6-7) + RPC1 (s8-15) + blitz audio/engine (s8-15) sur 10 sem. → débordement vers T4 |
-| **T4** (stage) | ~420 h | **~450 h** | 🟠 **Plus chargé** : reçoit le PCB prélim, le contenu de jeu, la maturation audio/engine, le polish boîtier reportés de S6 |
-| **S7** | 1890 h | ~1350 h | 🟢 Marge confortable (6 cr) |
-| **T5** (stage) | ~420 h | ~300 h | 🟢 Finalisation contenu/sons + portage |
-| **S8** | 945 h | ~650 h | 🟢 Intégration + tests + Expo + RLP |
+| **S6** | 1080 h (1080 h nominal, mais ~720 h **restantes** s6-15) | **~750-850 h** | 🔴 **Sur-souscrite** : MIP (s6-7) + RPC1 (s8-15) + blitz audio/engine (s8-15) sur 10 sem. → débordement vers T4 |
+| **T4** (stage) | ~480 h | **~450 h** | 🟢 **Dans sa capacité** (marge mince) : absorbe le PCB prélim, le contenu de jeu, la maturation audio/engine, le polish boîtier reportés de S6 (~450 h pour ~480 h dispo) |
+| **S7** | 2160 h | ~1350 h | 🟢 Marge confortable (6 cr) |
+| **T5** (stage) | ~480 h | ~300 h | 🟢 Finalisation contenu/sons + portage |
+| **S8** | 1080 h | ~650 h | 🟢 Intégration + tests + Expo + RLP |
 
-> **🔴 S6 est le vrai goulot de capacité.** En démarrant le technique en s8 (après le MIP), il ne reste que ~10 semaines pour : MIP + RPC1 (2 livrables académiques) **et** le blitz audio+engine. **Leviers :** (1) IDE entièrement en S7 ; (2) PCB prélim + contenu de jeu **reportés en T4** ; (3) priorité absolue au **cœur audio+engine** (chemin critique vers le MCU) ; le boîtier mobilise 1 personne. **À surveiller :** T4 dépasse légèrement sa capacité nominale réduite — ajuster les heures de stage ou démarrer une partie du contenu en fin de S6 si bande passante.
+> **🔴 S6 est le vrai goulot de capacité.** En démarrant le technique en s8 (après le MIP), il ne reste que ~10 semaines pour : MIP + RPC1 (2 livrables académiques) **et** le blitz audio+engine. **Leviers :** (1) IDE entièrement en S7 ; (2) PCB prélim + contenu de jeu **reportés en T4** ; (3) priorité absolue au **cœur audio+engine** (chemin critique vers le MCU) ; le boîtier mobilise 1 personne. **À surveiller :** avec le 8ᵉ membre, T4 absorbe les reportés dans sa capacité (~450 h pour ~480 h dispo) mais avec peu de marge — démarrer une partie du contenu en fin de S6 reste souhaitable si bande passante.
 
 ## Jalons de convergence
 
