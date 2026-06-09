@@ -453,7 +453,7 @@ Le **mode d'assemblage n'est pas encore tranché** ; les deux options sont chiff
 | Gestion & livrables académiques (MIP, RPC1/2, RLP, RAE, réunions, audits, tableaux de bord) | ~1030h | 24 % |
 | Flux A — Game engine (ENG) | ~640h | 15 % |
 | Flux B — Audio HRTF (AUD) | ~640h | 15 % |
-| Flux C — Hardware (ELEC) | ~590h | 14 % |
+| Flux C — Hardware (ELEC) | ~590h | 13 % |
 | Flux D — Contenu de jeu (JEU) | ~550h | 13 % |
 | Flux E — IDE accessible (ENG) | ~640h | 15 % |
 | Flux F — Communauté DV + éthique | ~230h | 5 % |
