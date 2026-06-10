@@ -22,7 +22,7 @@
 | **Dépend de** | ID(s) prédécesseur(s) — `—` si aucune |
 | **Statut** | `[ ]` à faire · `[x]` fait · `~~…~~` annulé/déplacé |
 
-**Schéma des ID** — Tâches existantes : `ADM-`, `PART-`, `COM-`, `ETH-`, `MIP-`, `RPC1-`, `TECH-`, `S7-T`, `S8-T`, `EVAL-`. Tâches ajoutées : préfixe de bloc `GE-`, `AU-`, `PCB-`, `BOI-`, `JEU-`, `IDE-`, `AUDHW-`.
+**Schéma des ID** — Tâches existantes : `ADM-`, `PART-`, `COM-`, `ETH-`, `MIP-`, `RPC1-`, `TECH-`, `S7-T`, `S8-T`, `EVAL-`. Tâches ajoutées : préfixe de bloc `GE-`, `AU-`, `PCB-`, `BOI-`, `JEU-`, `IDE-`, `AUDHW-`, `WEB-`.
 
 ---
 
@@ -97,6 +97,26 @@
 | ETH-05 | Soumission du protocole au superviseur | ÉQUIPE | 2h | S8 | 2027-09-27 | 2027-10-02 | ETH-04 | [ ] | **Obligatoire avant toute expérimentation** |
 
 > **Rappel :** tout essai du prototype (même partiel) exige un protocole d'essai préalablement validé (Guide 2.1.5).
+
+### 1E. Landing page & rayonnement en ligne (Flux G)
+
+> **Page web publique de NATHAN** — convertit les curieux en : inscrits à la **liste d'attente** (intérêt produit + nouvelles par courriel), membres du **Discord**, observateurs/contributeurs **GitHub**, soutiens **GoFundMe**. Brief complet déjà rédigé → `docs/BRIEF-WEBPAGE-NATHAN.md` (sections, ton, accessibilité, stack).
+> **Hébergement & automatisation :** site **hébergé sur Vercel** (CI/CD depuis GitHub, `WEB-06`) sous **domaine personnalisé** (`WEB-07`) ; la **barre de progression se synchronise automatiquement avec JIRA** et avance à la complétion des tâches (`WEB-08`), sans MAJ manuelle.
+> **Hors chemin critique :** tâche légère **1 personne + assistance IA**, **ne mobilise PAS** le blitz audio+engine (≈ 7 pers.). Public, donc **indépendante de la convention** (`PART-08`) — contrairement au recrutement DV formel (1C). Le lien Discord dépend de `COM-01`. À distinguer de la **page descriptive académique** Annexe Z (`S7-08`).
+
+| ID | Tâche | Rôle | Est. | Période | Début | Fin | Dépend de | Statut | Notes |
+|----|-------|------|------|---------|------------|------------|-----------|--------|-------|
+| WEB-01 | Rédaction du contenu FR (hero, sections, FAQ, CTA) | ÉQUIPE | 8h | S6 | 2026-06-15 | 2026-06-19 | — | [ ] | Tiré du brief (§7) ; ton militant non larmoyant ; vocabulaire inclusif (§9) |
+| WEB-02 | Construction de la landing page (Astro/Tailwind, HTML sémantique, WCAG 2.2 AA) | ENG | 24h | S6 | 2026-06-22 | 2026-07-03 | WEB-01 | [ ] | 1 pers. + IA. Accessibilité non négociable (brief §8) : clavier, focus visible, contraste, Atkinson Hyperlegible |
+| WEB-03 | Formulaire « liste d'attente » + collecte courriel (Tally/Formspree) | ENG | 8h | S6 | 2026-06-29 | 2026-07-03 | WEB-02 | [ ] | Nom + courriel + case « concerné·e par la DV ? » (priorisation bêta). Nouvelles du projet |
+| WEB-04 | Intégration liens Discord/GitHub/GoFundMe + barre de progression (source de données jalons) | ENG | 8h | S6 | 2026-06-29 | 2026-07-06 | WEB-02,COM-01 | [ ] | Statut des 13 jalons (brief §6) lu d'une source MAJ-able (JSON statique au départ → **alimenté automatiquement par `WEB-08`**). GoFundMe/Discord = placeholders à compléter |
+| WEB-05 | Test accessibilité (NVDA, clavier, contraste, reduced-motion) | ENG | 6h | S6 | 2026-07-06 | 2026-07-10 | WEB-03,WEB-04 | [ ] | Lecteur d'écran **avant** mise en ligne (WEB-06) |
+| WEB-06 | **Déploiement Vercel + CI/CD** (projet lié au repo GitHub, auto-deploy sur push `main`, preview deployments) | ENG | 6h | S6 | 2026-07-06 | 2026-07-10 | WEB-02 | [ ] | Config via `vercel.ts`. Preview par PR ; production sur `main`. Vercel Analytics (suivi de trafic) optionnel |
+| WEB-07 | **Domaine personnalisé** (acquisition + DNS + HTTPS/SSL automatique sur Vercel) | GESTION | 4h | S6 | 2026-07-13 | 2026-07-17 | WEB-06 | [ ] | Domaine `[à acquérir]` (ex. `nathan-console.org`) ou sous-domaine UdeS. SSL auto Vercel. Latence DNS possible |
+| WEB-08 | **Suivi automatisé : synchro JIRA → barre de progression** | ENG | 24h | S6 | 2026-07-13 | 2026-07-24 | WEB-04,WEB-06,JIRA prêt | [ ] | Les 13 jalons (brief §6) ↔ epics/versions JIRA ; % = issues complétées / total. **Webhook JIRA → Vercel Function → Edge Config** (lecture instantanée par le site), ou **Cron Job quotidien** (`vercel.ts`) qui interroge l'API REST JIRA. Avance **tout seul** à la complétion des tâches |
+
+> **À éviter (brief §11) :** dates fermes non validées (« cible »/« visée »), promesse de Kickstarter datée, couleur seule comme indicateur d'état.
+> **Dépendance `WEB-08` :** suppose l'**import JIRA effectué** (cf. note de révision #10 et pied de page — « revue d'équipe → import JIRA CSV depuis ce fichier »). Mapper chaque jalon de la barre à un epic/une version JIRA dès l'import pour que la synchro soit triviale. Garde un secret `JIRA_API_TOKEN` dans les variables d'environnement Vercel (jamais commité).
 
 ### 2A. Rédaction du MIP — *finalisation cette semaine (s6), remise finale 18 juin (s7)*
 
@@ -411,6 +431,8 @@ gantt
     Interfaces gelées                  :milestone, 2026-06-29, 0d
     Blitz audio + game engine          :active, 2026-06-22, 2026-08-14
     Boîtier (mockup ergonomie)         :2026-06-22, 2026-08-07
+    Landing page (Vercel + domaine)    :2026-06-15, 2026-07-17
+    Suivi auto JIRA -> barre progrès    :2026-07-13, 2026-07-24
     RPC1 (rédaction)                   :2026-06-22, 2026-08-14
     Jeu V1 jouable sur PC              :milestone, 2026-08-14, 0d
     section T4 stage automne 2026

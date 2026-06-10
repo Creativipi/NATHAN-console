@@ -52,7 +52,7 @@ Créer une console de jeu **open-source**, **abordable** et **inclusive**, où l
 
 | Composant | État | Détails |
 |-----------|------|---------|
-| Modèles 3D boîtier | ✅ Complet | 3 pièces SolidWorks (.SLDPRT), STL générés |
+| Modèles 3D boîtier | ✅ Complet | 3 pièces SolidWorks (.SLDPRT, importables dans Onshape — géométrie conservée), STL générés |
 | PCB KiCAD | ✅ Complet | Gerbers prêts pour fabrication |
 | BOM (liste de matériaux) | ✅ Documenté | Composants sourcés |
 | Documentation README | ✅ Rédigé | Histoire, vision, fonctionnalités |
@@ -400,7 +400,7 @@ void minigame_unload(void);
 | Livrable | ELEC | ENG | AUD | JEU |
 |----------|------|-----|-----|-----|
 | Schéma / PCB (MCU choisi) | **R** | C | — | — |
-| Boîtier v2.0 (SolidWorks) | **R** | C | — | — |
+| Boîtier v2.0 (Onshape) | **R** | C | — | — |
 | Soudure et validation matérielle | **R** | — | — | — |
 | Contrats d'interface (Phase 0) | C | **R** | C | I |
 | InputMapper (toutes implémentations) | C | **R** | — | — |
