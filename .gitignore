@@ -2,3 +2,18 @@
 *.lck
 *.stackdump
 CAD_Files/PCB/NATHAN-console_KiCAD.kicad_pro/NATHAN-console-backups/
+
+# Outil Node jira-sync
+tools/jira-sync/node_modules/
+tools/jira-sync/.env
+tools/jira-sync/seed-plan.json
+
+# Artefacts Playwright (revue visuelle)
+.playwright-mcp/
+
+# Dashboard live : contient des données personnelles réelles (noms, heures) — régénéré localement
+docs/planning/dashboard-live.html
+
+# Dashboard PM : régénéré localement (mock ou live)
+docs/planning/dashboard-pm.html
+docs/planning/dashboard-pm.pdf
